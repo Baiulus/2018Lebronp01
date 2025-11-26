@@ -1,0 +1,14 @@
+THIS IS NOT AN OFFICIAL DOCUMENT TO BE GRADED PLEASE IM BEGGING YOU
+
+  Current ideas (concept):
+    - Gambling - API: Currency
+    Pokemon TCG Gacha - API: PokeTCG
+    Card Games - API: DeckofCards
+    - Simulators - API: Currency
+
+    - Datafinding
+    Location data - API: Countries, Weather
+    Game data - API: Hypixel/Pokemon/Riot/DnD
+    Book data - API: NYTimesBooks/NYPL (No card yet)
+    Movies - API: Movies
+    Recipies - API: FreeRecipie
