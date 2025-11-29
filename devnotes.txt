@@ -2,8 +2,39 @@ THIS IS NOT AN OFFICIAL DOCUMENT TO BE GRADED PLEASE IM BEGGING YOU
 
   Current ideas (concept):
     - Gambling - API: Currency
+
+
     Pokemon TCG Gacha - API: PokeTCG
+      CODE:
+        -Collection data
+          Cards owned
+          Quantity of each card
+        -Card data
+          Stats
+          Card images
+        -Pack data
+          -Randomization of cards
+            Card rarity
+          -Card choice
+            Might require an in-app database of cards?
+        -Battle UI (optional?)
+          In-app updates per move
+          Battle data (HP, attacks, etc)
+          User ability (Clicking on items)
+          
     Card Games - API: DeckofCards
+      -Deck data
+        Shuffling
+        Card counts
+      -Currency data
+        Currency amount per player (cookies)
+        Exchange rates
+      -Game UI
+        Bets
+        Game data (Blackjack, poker, etc.)
+        
+        
+
     - Simulators - API: Currency
 
     - Datafinding
