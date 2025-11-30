@@ -23,21 +23,31 @@ THIS IS NOT AN OFFICIAL DOCUMENT TO BE GRADED PLEASE IM BEGGING YOU
           User ability (Clicking on items)
           
     Card Games - API: DeckofCards
-      -Deck data
-        Shuffling
-        Card counts
-      -Currency data
-        Currency amount per player (cookies)
-        Exchange rates
-      -Game UI
-        Bets
-        Game data (Blackjack, poker, etc.)
-        
-        
+      CODE:
+        -Deck data
+          Shuffling
+          Card counts
+        -Currency data
+          Currency amount per player (cookies)
+          Exchange rates
+        -Game UI
+          Bets
+          Game data (Blackjack, poker, etc.)
+          View/Hide opponent cards
 
     - Simulators - API: Currency
 
     - Datafinding
+      CODE:
+        -Data updates
+          Page refreshes
+          Data caches
+          API request limit workarounds
+        -UI
+          Data collection and storage
+          Presentation
+          Search interface
+
     Location data - API: Countries, Weather
     Game data - API: Hypixel/Pokemon/Riot/DnD
     Book data - API: NYTimesBooks/NYPL (No card yet)
