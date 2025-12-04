@@ -7,14 +7,57 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>{% block title %}{% endblock %} - Multi-Showdown</title>
   </head>
   <body>
+
     <header>
-      <nav>
-        <div>
+
+      <nav class="bg-neutral-primary fixed w-full z-20 top-0 start-0 border-b border-default">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+          <a href="https://github.com/Baiulus/2018Lebronp01.git" class="flex items-center space-x-3 rtl:space-x-reverse">
+              <img src="https://i1.sndcdn.com/artworks-000354740973-8rn8ri-t500x500.jpg" class="h-10" alt="2018 Lebron" />
+              <span class="self-center text-xl text-heading font-semibold whitespace-nowrap">2018 Lebron</span>
+          </a>
+
+          <div id="navbar-default">
+            <ul class="font-medium flex md:flex-row md:space-x-8 rtl:space-x-reverse">
+              <li>
+                <a href="/" class="text-heading hover:bg-neutral-tertiary md:bg-transparent md:hover:text-red-500">Home</a>
+              </li>
+              {% if not session['username'] %}
+              <li>
+                <a href="/login" class="md:hover:text-red-500">Log In</a>
+              </li>
+
+              <li>
+                <a href="/createaccount" class="text-heading md:hover:text-red-500">Create Account</a>
+              </li>
+              {% else %}
+              <li>
+                <a href="/roster" class="text-heading md:hover:text-red-500">Character Roster</a>
+              </li>
+
+              <li>
+                <a href="/teamselect" class="text-heading md:hover:text-red-500">Team Select</a>
+              </li>
+
+              <li>
+                <a href="/showdown" class="text-heading md:hover:text-red-500">Showdown</a>
+              </li>
+
+              <li>
+                <a href="/logout" class="text-heading md:hover:text-red-500">Log Out</a>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
         </div>
       </nav>
+
     </header>
     
     <main class="content">

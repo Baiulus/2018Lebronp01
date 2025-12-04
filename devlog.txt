@@ -23,3 +23,9 @@ mycroftL -- 2025-12-03 10:24
 CREATE DIR
 -  created app
 -  created __init__.py 
+
+shafinK -- 2025-12-03 21:47
+NAVBAR AND NEW HTMLS:
+- created createaccount.html, homepage.html, login.html 
+- created display functions for each new html
+- added navbar to base.html
