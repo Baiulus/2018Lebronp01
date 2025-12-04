@@ -32,3 +32,6 @@ NAVBAR AND NEW HTMLS:
 - created createaccount.html, homepage.html, login.html 
 - created display functions for each new html
 - added navbar to base.html
+
+lucasZ -- 2025-12-04 01:37
+- Added game description to README.md
