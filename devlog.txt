@@ -40,3 +40,6 @@ lucasZ -- 2025-12-04 10:52
 - Created auth.py
 - Added signup, login, and logout code for auth.py -- Waiting for db for verification
 - Renamed createaccount.html to signup.html
+
+mycroftL -- 2025-12-04 10:57
+- Added db tables to __init__.py
