@@ -23,3 +23,6 @@ mycroftL -- 2025-12-03 10:24
 CREATE DIR
 -  created app
 -  created __init__.py 
+
+mycroftL -- 2025-12-03 19:49
+-  added db selection commands to __init__.py
