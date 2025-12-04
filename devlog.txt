@@ -1,15 +1,15 @@
 lucasZ -- 2025-11-26 00:00
 - submodule linked
-- team registered 
+- Team registered
 - README for roster
 
 mycroftL -- 2025-11-26 00:00
 - Added team flag
 
 mycroftL -- 2025-12-02 00:00
-- Added design.pdf 
+- Added design.pdf
 
-shafinK -- 2025-12-03 00:00 
+shafinK -- 2025-12-03 00:00
 - Updated design.pdf
 - Added .gitignore + devlog.txt
 
@@ -21,17 +21,22 @@ INITIAL DD REVIEW:
 
 mycroftL -- 2025-12-03 10:24
 CREATE DIR
--  created app
--  created __init__.py 
+-  Created app
+-  Created __init__.py
 
 mycroftL -- 2025-12-03 19:49
--  added db selection commands to __init__.py
+-  Added db selection commands to __init__.py
 
 shafinK -- 2025-12-03 21:47
 NAVBAR AND NEW HTMLS:
-- created createaccount.html, homepage.html, login.html 
-- created display functions for each new html
-- added navbar to base.html
+- Created createaccount.html, homepage.html, login.html
+- Created display functions for each new html
+- Added navbar to base.html
 
 lucasZ -- 2025-12-04 01:37
 - Added game description to README.md
+
+lucasZ -- 2025-12-04 10:52
+- Created auth.py
+- Added signup, login, and logout code for auth.py -- Waiting for db for verification
+- Renamed createaccount.html to signup.html
