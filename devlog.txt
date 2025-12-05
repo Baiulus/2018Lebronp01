@@ -43,3 +43,7 @@ lucasZ -- 2025-12-04 10:52
 
 mycroftL -- 2025-12-04 10:57
 - Added db tables to __init__.py
+
+mycroftL -- 2025-12-04-21:28
+- Added keys dir
+- Added readme to keys dir

@@ -1,0 +1,6 @@
+IMPORTANT: So, NONE OF OUR API's need or require keys
+
+Quotas:
+YuGiOh: 20 requests/second
+Pokémon: Rough estimate, 100/minute
+DnD5e: No stated quota
