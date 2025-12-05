@@ -29,21 +29,9 @@ cursor.execute(f"create table if not exists chars (charname text, imagelink text
 #Flask commands
 @app.route("/")
 def disp_homepage():
-    # we dont have a proper session username set up so this is used for testing !! 
-    # session['username'] = "bronbron" 
+    # we dont have a proper session username set up so this is used for testing !!
+    # session['username'] = "bronbron"
     return render_template("homepage.html")
-
-
-@app.route("/login", methods = ["GET", "POST"])
-def disp_login():
-    return render_template("login.html")
-
-
-@app.route("/createaccount", methods = ["GET", "POST"])
-def disp_createaccount():
-    return render_template("createaccount.html")
-
-
 
 
 #QoL db commands
@@ -53,18 +41,18 @@ def accessitem(tablename, columnname): #accesses "columnname" from a chosen "tab
 
 def accessitem_s(tablename, columnname, itemname): #accesses a single item from a given column
     cursor.execute(f"Select * from"+tablename+"where"+columnname+"= '"+ itemname + "'") #input: select * from [__TABLENAME__] where [__COLUMNNAME__] = '[__ITEMNAME__]'
-    
-    
+
+
 def accessitem_m(tablename, columnname, itemarray): #accesses any item from the itemarray in a given column
-    
+
     for item in itemarray: #adds [']s to each item in itemarray to make it readable by sqlite
-        item = "'"+item+"'" 
-    
+        item = "'"+item+"'"
+
     items = ', '.join(map(str, itemarray)) #removes the brackets from itemarray to make items readable by sqlite
-    
+
     cursor.execute(f"Select * from" + tablename + "where" + columnname + "in (" + items + ")") #input: select * from [__TABLENAME__] where [__COLUMNNAME__] in [__ITEMS__]
-    
-    
+
+
 #--------------------------------------------------------------------------
 #TESTS
 

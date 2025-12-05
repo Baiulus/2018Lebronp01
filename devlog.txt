@@ -47,3 +47,6 @@ mycroftL -- 2025-12-04 10:57
 mycroftL -- 2025-12-04-21:28
 - Added keys dir
 - Added readme to keys dir
+
+shafinK -- 2025-12-05 10:52
+- fixed continuity with createaccount being changed to signup
