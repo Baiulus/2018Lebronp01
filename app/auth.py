@@ -52,15 +52,15 @@ def login_post():
             session["username"] = username
             return redirect(url_for('disp_homepage'))
         else:
-            flash('Invalid username or password', 'error')
+            flash('Invalid password', 'error')
             return redirect(url_for('auth.login_get'))
     else:
-        flash("Username incorrect or not found")
+        flash("Username incorrect or not found", 'error')
         return redirect(url_for('auth.login_get'))
 
 @bp.get('/logout')
 def logout_get():
     #Write code to update db on username
     session.pop('username', None)
-    flash('Logout successful', 'info')
+    flash('Logout successful', 'success')
     return redirect(url_for('auth.login_get'))

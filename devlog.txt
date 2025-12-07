@@ -61,6 +61,9 @@ shafinK -- 2025-12-17 14:22
 - redirects and flashes errors accordingly
 - changed layout of navbar
 
-shafinK -- 2024-12-17 14:40 
+shafinK -- 2025-12-17 14:40 
 - login redirects and flashes accordingly
 - session is handles properly with login/logout
+
+shafinK -- 2025-12-17 14:52
+- made fixed issue flashes not using their category
