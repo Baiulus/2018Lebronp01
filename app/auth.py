@@ -39,16 +39,28 @@ def login_get():
 def login_post():
     username = request.form.get('username')
     password = request.form.get('password')
-    #Write code for verification
-    if():
-        flash('Login successsful', 'success')
-        return redirect(url_for(''))
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    c.execute("select password from users where username = ?", (username,))
+    user_data = c.fetchone()
+    db.close()
+    if(user_data):
+        hashword = user_data[0]
+        if(check_password_hash(hashword, password)):
+            # this bottom flash would display the message on the next load of login but i assume we want it on homepage instead
+            # flash('Login successsful', 'success') 
+            session["username"] = username
+            return redirect(url_for('disp_homepage'))
+        else:
+            flash('Invalid username or password', 'error')
+            return redirect(url_for('auth.login_get'))
     else:
-        flash('Invalid username or passwork', 'error')
+        flash("Username incorrect or not found")
         return redirect(url_for('auth.login_get'))
 
 @bp.get('/logout')
 def logout_get():
     #Write code to update db on username
+    session.pop('username', None)
     flash('Logout successful', 'info')
     return redirect(url_for('auth.login_get'))
