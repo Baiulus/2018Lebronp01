@@ -50,3 +50,8 @@ mycroftL -- 2025-12-04-21:28
 
 shafinK -- 2025-12-05 10:52
 - fixed continuity with createaccount being changed to signup
+
+shafinK -- 2025-12-07 13:07
+- fixed issues with auth.py not linking to pages properly
+- added a form to login.html
+- added to gitignore

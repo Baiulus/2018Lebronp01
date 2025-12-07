@@ -1,12 +1,12 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from db import select_query, insert_query
+# from db import select_query, insert_query
 from werkzeug.security import generate_password_hash, check_password_hash
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.get('/signup')
 def signup_get():
-    return render_template('auth/signup.html')
+    return render_template('signup.html')
 
 @bp.post('/signup')
 def signup_post():
@@ -17,7 +17,7 @@ def signup_post():
 
 @bp.get('/login')
 def login_get():
-    return render_template('auth/login.html')
+    return render_template('login.html')
 
 @bp.post('/login')
 def login_post():

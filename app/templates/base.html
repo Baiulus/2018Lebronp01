@@ -30,27 +30,27 @@
               </li>
               {% if not session['username'] %}
               <li>
-                <a href="/login" class="md:hover:text-red-500">Log In</a>
+                <a href="/auth/login" class="md:hover:text-red-500">Log In</a>
               </li>
 
               <li>
-                <a href="/signup" class="text-heading md:hover:text-red-500">Create Account</a>
+                <a href="/auth/signup" class="text-heading md:hover:text-red-500">Create Account</a>
               </li>
               {% else %}
               <li>
-                <a href="/roster" class="text-heading md:hover:text-red-500">Character Roster</a>
+                <a href="/auth/roster" class="text-heading md:hover:text-red-500">Character Roster</a>
               </li>
 
               <li>
-                <a href="/teamselect" class="text-heading md:hover:text-red-500">Team Select</a>
+                <a href="/auth/teamselect" class="text-heading md:hover:text-red-500">Team Select</a>
               </li>
 
               <li>
-                <a href="/showdown" class="text-heading md:hover:text-red-500">Showdown</a>
+                <a href="/auth/showdown" class="text-heading md:hover:text-red-500">Showdown</a>
               </li>
 
               <li>
-                <a href="/logout" class="text-heading md:hover:text-red-500">Log Out</a>
+                <a href="/auth/logout" class="text-heading md:hover:text-red-500">Log Out</a>
               </li>
               {% endif %}
             </ul>
