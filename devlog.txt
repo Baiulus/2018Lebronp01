@@ -55,3 +55,8 @@ shafinK -- 2025-12-07 13:07
 - fixed issues with auth.py not linking to pages properly
 - added a form to login.html
 - added to gitignore
+
+shafinK --2025-12-17 14:22 
+- signup adds account to db
+- redirects and flashes errors accordingly
+- changed layout of navbar
