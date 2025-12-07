@@ -11,5 +11,48 @@ Home
 
 {% block content %}
 <!-- <h1>Testing...</h1> -->
+<br> <br> <br> <br> <br>
+<div class="flex flex-col items-center justify-center space-y-4">
+  <h1 class = "text-5xl text-red-600 font-bold">Welcome to 2018 Lebron's Multi-Showdown, {{ session['username'] }}!</h1>
+</div>
+
+<br> <br>
+
+<div class="flex flex-row items-center justify-center space-x-4">
+
+  <div class="max-w-sm rounded shadow-lg">
+    <img class="w-full h-64 object-cover" src="https://compote.slate.com/images/96d554af-9521-4a34-a155-8d64e5ee717e.jpeg?crop=5151%2C3434%2Cx0%2Cy0" alt="Lebron @ Celtics">
+    <div class="px-6 py-4">
+      <div class="font-bold text-xl mb-2">How it works</div>
+      <p class="text-gray-700 text-base">
+        [ brief overview of mechanics ]
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-sm rounded shadow-lg">
+    <img class="w-full h-64 object-cover" src="https://elitesportsny.com/app/uploads/2018/01/oklahoma-city-thunder-v-cleveland-cavaliers-1.jpg" alt="Lebron Backshots">
+    <div class="px-6 py-4">
+      <div class="font-bold text-xl mb-2">Choose your team</div>
+      <p class="text-gray-700 text-base">
+        [ explain how to choose team ]
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-sm rounded shadow-lg">
+    <img class="w-full h-64 object-cover" src="https://bdc2020.o0bc.com/wp-content/uploads/2018/05/APTOPIX_Raptors_Cavaliers_Basketball_26796-scaled.jpg" alt="Lebron @ Raptors">
+    <div class="px-6 py-4">
+      <div class="font-bold text-xl mb-2">Showdown!</div>
+      <p class="text-gray-700 text-base">
+        [ explain how to start a showdown ]
+      </p>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
 {% endblock %}
 

@@ -33,7 +33,10 @@ cursor.execute(f"create table if not exists chars (charname text, imagelink text
 def disp_homepage():
     # we dont have a proper session username set up so this is used for testing !!
     # session['username'] = "bronbron"
-    return render_template("homepage.html")
+    if (session.get('username')):
+        return render_template("homepage.html")
+    else:
+        return redirect(url_for('auth.login_get'))
 
 
 #QoL db commands

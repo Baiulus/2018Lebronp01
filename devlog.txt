@@ -56,14 +56,18 @@ shafinK -- 2025-12-07 13:07
 - added a form to login.html
 - added to gitignore
 
-shafinK -- 2025-12-17 14:22 
+shafinK -- 2025-12-07 14:22 
 - signup adds account to db
 - redirects and flashes errors accordingly
 - changed layout of navbar
 
-shafinK -- 2025-12-17 14:40 
+shafinK -- 2025-12-07 14:40 
 - login redirects and flashes accordingly
 - session is handles properly with login/logout
 
-shafinK -- 2025-12-17 14:52
+shafinK -- 2025-12-07 14:52
 - made fixed issue flashes not using their category
+
+shafinK -- 2025-12-07 15:30
+- started work on homepage 
+- homepage autoredirects to login if not logged in
