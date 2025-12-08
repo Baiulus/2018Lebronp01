@@ -56,12 +56,12 @@ shafinK -- 2025-12-07 13:07
 - added a form to login.html
 - added to gitignore
 
-shafinK -- 2025-12-07 14:22 
+shafinK -- 2025-12-07 14:22
 - signup adds account to db
 - redirects and flashes errors accordingly
 - changed layout of navbar
 
-shafinK -- 2025-12-07 14:40 
+shafinK -- 2025-12-07 14:40
 - login redirects and flashes accordingly
 - session is handles properly with login/logout
 
@@ -69,7 +69,7 @@ shafinK -- 2025-12-07 14:52
 - made fixed issue flashes not using their category
 
 shafinK -- 2025-12-07 15:30
-- started work on homepage 
+- started work on homepage
 - homepage autoredirects to login if not logged in
 
 shafinK -- 2025-12-07 15:30
@@ -83,3 +83,8 @@ lucasZ -- 2025-12-08 01:44
 - finished (?) db update methods for user and characters of game
 - added part of db update method for deck handling
 - Reformat code for base.html, login.html, signup.html, dp.py, auth.py, __init__.py
+
+shafinK -- 2025-12-08 10:35
+- removed code-breaking import
+- fixed broken image on homepage.html
+- added helpful links from/to singup/login to each other

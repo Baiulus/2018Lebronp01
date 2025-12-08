@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 # from db import select_query, insert_query
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
-from db import verify_user
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 DB_FILE = "Lebron.db"
@@ -48,7 +47,7 @@ def login_post():
         hashword = user_data[0]
         if(check_password_hash(hashword, password)):
             # this bottom flash would display the message on the next load of login but i assume we want it on homepage instead
-            # flash('Login successsful', 'success') 
+            # flash('Login successsful', 'success')
             session["username"] = username
             return redirect(url_for('disp_homepage'))
         else:
