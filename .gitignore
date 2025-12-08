@@ -130,3 +130,4 @@ ehthumbs.db
 #other stuff
 __pycache__
 *.db
+.vscode/
