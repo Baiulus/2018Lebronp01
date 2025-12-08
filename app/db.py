@@ -19,7 +19,7 @@ def get_connection():
 
 
 # Get user by username
-def get_user(username: str) -> Optional[Dict]:
+def get_user(username: str) -> Optional[Dict]: #can return [dict] or [none]
     db = get_connection()
 
     cursor.execute(
@@ -32,7 +32,7 @@ def get_user(username: str) -> Optional[Dict]:
 
 
 # Creates new unique user
-def create_user(username: str, password_hash: str) -> bool:
+def create_user(username: str, password_hash: str) -> bool: #return [boolean]
     conn = get_connection()
 
     try:
@@ -64,7 +64,7 @@ def get_character_by_id(char_id: int) -> Optional[Dict]:
 
 # Get characters by universe
 def get_characters_by_universe(
-    universe: str, limit: int = 50
+    universe: str, limit: int = 50 #can only return max 50 items
 ) -> List[Dict]:  # Change limit?
     conn = get_connection()
 
@@ -84,7 +84,7 @@ def search_characters(query: str, limit: int = 20) -> List[Dict]:  # Change limi
 
     cursor.execute(
         "SELECT * FROM chars WHERE charname LIKE ? ORDER BY charname LIMIT ?",
-        (f"%{query}%", limit),
+        (f"%{query}%", limit), #from page query
     )
     rows = cursor.fetchall()
     conn.close()
@@ -104,7 +104,7 @@ def get_all_characters(limit: int = 100) -> List[Dict]:  # Change limit?
 
 
 # Add new character to database
-def add_character(character_data: Dict) -> int:
+def add_character(character_data: Dict) -> int: #character_data as dictionary data from the api
     conn = get_connection()
 
     try:
@@ -113,13 +113,13 @@ def add_character(character_data: Dict) -> int:
                 INSERT OR IGNORE INTO chars 
                 (charname, universe, type, hp, attack, defense, speed, 
                  special_attack, special_defense, image_url, api_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+            """, # ? to be chosen
             (
-                character_data["charname"],
+                character_data["charname"], #API COMMANDS
                 character_data["universe"],
-                character_data.get("type", "Unknown"),
-                character_data.get("hp", 50),
+                character_data.get("type", "Unknown"), #gets all characters with a type of Unknown (get is a command used for the dict data)
+                character_data.get("hp", 50), #gets all characters with an hp of 50 
                 character_data.get("attack", 50),
                 character_data.get("defense", 50),
                 character_data.get("speed", 50),
@@ -146,7 +146,7 @@ def add_character(character_data: Dict) -> int:
 
 
 # Get user's team
-def get_user_team(self, username: str) -> Optional[Dict]:
+def get_user_team(username: str) -> Optional[Dict]:
     conn = get_connection()
 
     cursor.execute("SELECT * FROM teams WHERE teamuser = ?", (username,))
