@@ -1,52 +1,52 @@
 lucasZ -- 2025-11-26 00:00
 - submodule linked
-- Team registered
-- README for roster
+- team registered
+- made and updated README.md for roster
 
 mycroftL -- 2025-11-26 00:00
-- Added team flag
+- added team flag
 
 mycroftL -- 2025-12-02 00:00
-- Added design.pdf
+- added design.pdf
 
 shafinK -- 2025-12-03 00:00
-- Updated design.pdf
-- Added .gitignore + devlog.txt
+- updated design.pdf
+- added .gitignore + devlog.txt
 
 lucasZ -- 2025-12-03 01:00
 INITIAL DD REVIEW:
-- Redo the organization and appearance of tables
-- Swtich Digimon API to DND API
-- Edit pointers of the component map
+- redo the organization and appearance of tables
+- swtich Digimon API to DND API
+- edit pointers of the component map
 
 mycroftL -- 2025-12-03 10:24
 CREATE DIR
--  Created app
--  Created __init__.py
+-  created app
+-  created __init__.py
 
 mycroftL -- 2025-12-03 19:49
--  Added db selection commands to __init__.py
+-  added db selection commands to __init__.py
 
 shafinK -- 2025-12-03 21:47
 NAVBAR AND NEW HTMLS:
-- Created createaccount.html, homepage.html, login.html
-- Created display functions for each new html
-- Added navbar to base.html
+- created createaccount.html, homepage.html, login.html
+- created display functions for each new html
+- added navbar to base.html
 
 lucasZ -- 2025-12-04 01:37
-- Added game description to README.md
+- added game description to README.md
 
 lucasZ -- 2025-12-04 10:52
-- Created auth.py
-- Added signup, login, and logout code for auth.py -- Waiting for db for verification
-- Renamed createaccount.html to signup.html
+- created auth.py
+- added signup, login, and logout code for auth.py -- Waiting for db for verification
+- renamed createaccount.html to signup.html
 
 mycroftL -- 2025-12-04 10:57
-- Added db tables to __init__.py
+- added db tables to __init__.py
 
 mycroftL -- 2025-12-04-21:28
-- Added keys dir
-- Added readme to keys dir
+- added keys dir
+- added readme to keys dir
 
 shafinK -- 2025-12-05 10:52
 - fixed continuity with createaccount being changed to signup
@@ -76,3 +76,10 @@ shafinK -- 2025-12-07 15:30
 - added requirements.txt
 - added install guide to readme.md
 - added roster/roles to readme.md
+
+lucasZ -- 2025-12-08 01:44
+- added build_db.py
+- added db.py
+- finished (?) db update methods for user and characters of game
+- added part of db update method for deck handling
+- Reformat code for base.html, login.html, signup.html, dp.py, auth.py, __init__.py

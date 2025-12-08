@@ -1,0 +1,170 @@
+import sqlite3
+import json
+from typing import List, Dict, Optional
+
+DB_FILE = "Lebron.db"
+db = sqlite3.connect(DB_FILE, check_same_thread=False)
+cursor = db.cursor()
+db.row_factory = sqlite3.Row
+
+
+def get_connection():
+    """Get a database connection with row factory"""
+
+    db.row_factory = sqlite3.Row  # Return rows as dictionaries
+    return db
+
+
+# User Methods
+
+
+# Get user by username
+def get_user(username: str) -> Optional[Dict]:
+    db = get_connection()
+
+    cursor.execute(
+        "SELECT username, created_at FROM users WHERE username = ?", (username,)
+    )
+    row = cursor.fetchone()
+    db.close()
+
+    return dict(row) if row else None
+
+
+# Creates new unique user
+def create_user(username: str, password_hash: str) -> bool:
+    conn = get_connection()
+
+    try:
+        cursor.execute(
+            "INSERT INTO users (username, password) VALUES (?, ?)",
+            (username, password_hash),
+        )
+        conn.commit()
+        return True
+    except sqlite3.IntegrityError:
+        return False  # Username already exists
+    finally:
+        conn.close()
+
+
+# Charater Methods
+
+
+# Get character by ID
+def get_character_by_id(char_id: int) -> Optional[Dict]:
+    conn = get_connection()
+
+    cursor.execute("SELECT * FROM chars WHERE id = ?", (char_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    return dict(row) if row else None
+
+
+# Get characters by universe
+def get_characters_by_universe(
+    universe: str, limit: int = 50
+) -> List[Dict]:  # Change limit?
+    conn = get_connection()
+
+    cursor.execute(
+        "SELECT * FROM chars WHERE universe = ? ORDER BY charname LIMIT ?",
+        (universe, limit),
+    )
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [dict(row) for row in rows]
+
+
+# Search characters by name
+def search_characters(query: str, limit: int = 20) -> List[Dict]:  # Change limit?
+    conn = get_connection()
+
+    cursor.execute(
+        "SELECT * FROM chars WHERE charname LIKE ? ORDER BY charname LIMIT ?",
+        (f"%{query}%", limit),
+    )
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [dict(row) for row in rows]
+
+
+# Get all characters
+def get_all_characters(limit: int = 100) -> List[Dict]:  # Change limit?
+    conn = get_connection()
+
+    cursor.execute("SELECT * FROM chars ORDER BY universe, charname LIMIT ?", (limit,))
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [dict(row) for row in rows]
+
+
+# Add new character to database
+def add_character(character_data: Dict) -> int:
+    conn = get_connection()
+
+    try:
+        cursor.execute(
+            """
+                INSERT OR IGNORE INTO chars 
+                (charname, universe, type, hp, attack, defense, speed, 
+                 special_attack, special_defense, image_url, api_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                character_data["charname"],
+                character_data["universe"],
+                character_data.get("type", "Unknown"),
+                character_data.get("hp", 50),
+                character_data.get("attack", 50),
+                character_data.get("defense", 50),
+                character_data.get("speed", 50),
+                character_data.get("special_attack", character_data.get("attack", 50)),
+                character_data.get(
+                    "special_defense", character_data.get("defense", 50)
+                ),
+                character_data.get("image_url", ""),
+                character_data.get("api_id", ""),
+            ),
+        )
+
+        char_id = cursor.lastrowid
+        conn.commit()
+        return char_id
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        conn.close()
+
+
+# Deck Building Methods
+
+
+# Get user's team
+def get_user_team(self, username: str) -> Optional[Dict]:
+    conn = get_connection()
+
+    cursor.execute("SELECT * FROM teams WHERE teamuser = ?", (username,))
+    row = cursor.fetchone()
+
+    # Get character stats for each slot
+    if row:
+        team = dict(row)
+        team["characters"] = []
+        for i in range(1, 4):
+            char_id = team.get(f"teamslot{i}")
+            if char_id:
+                cursor.execute("SELECT * FROM chars WHERE id = ?", (char_id,))
+                char = cursor.fetchone()
+                if char:
+                    team["characters"].append(dict(char))
+    else:
+        team = None
+
+    conn.close()
+    return team

@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 # from db import select_query, insert_query
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
+from db import verify_user
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 DB_FILE = "Lebron.db"
@@ -43,7 +44,6 @@ def login_post():
     c = db.cursor()
     c.execute("select password from users where username = ?", (username,))
     user_data = c.fetchone()
-    db.close()
     if(user_data):
         hashword = user_data[0]
         if(check_password_hash(hashword, password)):
