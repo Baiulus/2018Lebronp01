@@ -2,12 +2,12 @@
 
 # import
 from flask import Flask, render_template, request, session, url_for, redirect
-from auth import bp as auth_bp
+#from auth import bp as auth_bp
 import sqlite3, os
 
 # Flask app creation
 app = Flask(__name__)
-app.register_blueprint(auth_bp)
+#app.register_blueprint(auth_bp)
 app.secret_key = os.urandom(24)
 
 # db cursor
