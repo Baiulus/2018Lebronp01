@@ -92,3 +92,7 @@ shafinK -- 2025-12-08 10:35
 shafinK -- 2025-12-09 9:10
 - added dummy table on roster.html
 - added disp_roster on __init__.py
+
+shafinK -- 2025-12-08 10:57
+- added some code to add dummy characters to chars db
+- disp_roster formats chars db into a table and sends it to roster.html

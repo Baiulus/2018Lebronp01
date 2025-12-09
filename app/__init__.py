@@ -27,6 +27,42 @@ cursor.execute(
 cursor.execute(
     f"create table if not exists chars (charname text, imagelink text, id integer primary key, type text, attack integer, hp integer, genre text)"
 )
+
+# dummy characters to add into table to test formatting on website, leave this pls tyty
+# cursor.execute("""insert into chars
+#     (charname,
+#     imagelink,
+#     id,
+#     type,
+#     attack,
+#     hp,
+#     genre)
+#     values
+#     ('Lebron James',
+#     'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F12%2FLebron-James-Basketball-Player-PNG-Free-Image.png&f=1&nofb=1&ipt=023cda4e59b314393a042362367eff50c06dbad8dd6b2240e63ec9a92ea454aa',
+#     23,
+#     'Cavs',
+#     1000,
+#     1000,
+#     'NBA')""")
+#
+# cursor.execute("""insert into chars
+#     (charname,
+#     imagelink,
+#     id,
+#     type,
+#     attack,
+#     hp,
+#     genre)
+#     values
+#     ('Luka Doncic',
+#     'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fathlonsports.com%2F.image%2Far_8%3A10%252Cc_fill%252Ccs_srgb%252Cfl_progressive%252Cg_faces%3Acenter%252Cq_auto%3Agood%252Cw_620%2FMjE0NDY3ODg1NDUwNDA0ODg3%2Fluka-doncic.jpg&f=1&nofb=1&ipt=fd1f2789c9a64264dbda4d835fafd7fefe4c5b12fe01dcd9d6ed2044484cf8d5',
+#     77,
+#     'Lakers',
+#     7777,
+#     7777,
+#     'NBA')""")
+
 # ^ creates the [chars] table, with columns [charactername], [imagelink] (just a link to the image URL), [primary key]-[id], [type], [attack], [hp], [genre]
 # DEVNOTE - CREATE A WAY TO COUNT IDS SO THERES NO OVERLAP WITH ID NUMBERS
 
@@ -38,8 +74,6 @@ cursor.execute(
 # Flask commands
 @app.route("/")
 def disp_homepage():
-    # we dont have a proper session username set up so this is used for testing !!
-    # session['username'] = "bronbron"
     if session.get("username"):
         return render_template("homepage.html")
     else:
@@ -48,10 +82,37 @@ def disp_homepage():
 @app.route("/roster")
 def disp_roster():
     if session.get("username"):
-        return render_template("roster.html") 
+        table = ""
+        db = sqlite3.connect(DB_FILE)
+        c = db.cursor()
+        chars = c.execute("select * from chars")
+        for char in chars:
+            table += f"""<tr class="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default hover:bg-red-500 hover:text-neutral-50">
+                            <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                                {char[0]}"
+                            </th>
+                            <td class="px-6 py-4">
+                                "<img class="w-full h-8 object-cover"src = {char[1]}>
+                            </td>
+                            <td class="px-6 py-4">
+                                {char[3]}
+                            </td>
+                            <td class="px-6 py-4">
+                                {char[4]}
+                            </td>
+                            <td class="px-6 py-4">
+                                {char[5]}
+                            </td>
+                            <td class="px-6 py-4">
+                                {char[6]}
+                            </td>
+                        </tr>"""
+        return render_template("roster.html", table = table)
     else:
         return redirect(url_for("auth.login_get"))
 
+db.commit()
+db.close()
 
 # QoL db commands
 def accessitem(
