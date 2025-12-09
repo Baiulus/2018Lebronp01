@@ -7,10 +7,8 @@ db = sqlite3.connect(DB_FILE, check_same_thread=False)
 cursor = db.cursor()
 db.row_factory = sqlite3.Row
 
-
+# May reaplce
 def get_connection():
-    """Get a database connection with row factory"""
-
     db.row_factory = sqlite3.Row  # Return rows as dictionaries
     return db
 
@@ -40,12 +38,12 @@ def create_user(username: str, password_hash: str) -> bool: #return [boolean]
             "INSERT INTO users (username, password) VALUES (?, ?)",
             (username, password_hash),
         )
-        conn.commit()
+        db.commit()
         return True
     except sqlite3.IntegrityError:
         return False  # Username already exists
     finally:
-        conn.close()
+        cursor.close()
 
 
 # Charater Methods
@@ -57,7 +55,7 @@ def get_character_by_id(char_id: int) -> Optional[Dict]:
 
     cursor.execute("SELECT * FROM chars WHERE id = ?", (char_id,))
     row = cursor.fetchone()
-    conn.close()
+    cursor.close()
 
     return dict(row) if row else None
 
@@ -73,7 +71,7 @@ def get_characters_by_universe(
         (universe, limit),
     )
     rows = cursor.fetchall()
-    conn.close()
+    cursor.close()
 
     return [dict(row) for row in rows]
 
@@ -87,7 +85,7 @@ def search_characters(query: str, limit: int = 20) -> List[Dict]:  # Change limi
         (f"%{query}%", limit), #from page query
     )
     rows = cursor.fetchall()
-    conn.close()
+    cursor.close()
 
     return [dict(row) for row in rows]
 
@@ -98,7 +96,7 @@ def get_all_characters(limit: int = 100) -> List[Dict]:  # Change limit?
 
     cursor.execute("SELECT * FROM chars ORDER BY universe, charname LIMIT ?", (limit,))
     rows = cursor.fetchall()
-    conn.close()
+    cursor.close()
 
     return [dict(row) for row in rows]
 
@@ -133,13 +131,13 @@ def add_character(character_data: Dict) -> int: #character_data as dictionary da
         )
 
         char_id = cursor.lastrowid
-        conn.commit()
+        db.commit()
         return char_id
-    except Exception as e:
-        conn.rollback()
-        raise e
+    except: # Needed? 
+        cursor.rollback()
+        print("An error has occured")
     finally:
-        conn.close()
+        cursor.close()
 
 
 # Deck Building Methods
@@ -166,5 +164,29 @@ def get_user_team(username: str) -> Optional[Dict]:
     else:
         team = None
 
-    conn.close()
+    cursor.close()
     return team
+
+def create_team(username: str, character_ids: List[int], teamname: str = "Placeholder") -> None:
+    conn = get_connection()
+
+    cursor.execute(
+        """
+            INSERT INTO teams (teamuser, teamname, teamslot1, teamslot2, teamslot3)
+            VALUES (?, ?, ?, ?, ?)
+        """,
+        (
+            username,
+            teamname,
+            character_ids[0],
+            character_ids[1],
+            character_ids[2],
+        ),
+     )
+
+    db.commit()
+    cursor.close()
+
+#def edit_team(username: str, character_ids: List[int])
+
+    
