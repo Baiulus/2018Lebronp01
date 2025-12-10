@@ -4,23 +4,36 @@ import urllib.request
 from typing import List, Dict, Optional
 
 #formats api data into a dictionary
-def apiformat(link: str) -> Optional[Dict]: #example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
-    dataraw = requests.get(link)
+def poke_api_format(pokeid: int) -> Optional[Dict]: #example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
+    pokeurl = "https://pokeapi.co/api/v2/pokemon/" + str(pokeid)
+    
+    dataraw = requests.get(pokeurl)
     data = dataraw.json()
-
+    
     return data
 
 #POKEMON
-def get_hp(pokemon: str):
-    pokemonurl = "https://pokeapi.co/api/v2/pokemon/" + pokemon
-    pokedata = apiformat(pokemonurl)
+def get_stat(pokedata: Dict, statname: str):
+    for i in pokedata["stats"]:
+        stat = i["stat"]["name"]
+        if stat == statname:
+            statvalue = i["base_stat"]
+    
+    return statvalue
 
-    statname = pokedata
+def get_image(pokedata: Dict):
+    pokeimage = pokedata["sprites"]["front_default"]
+    
+    return pokeimage
 
-    hp = pokedata["stats"][0]
-    print(hp)
+def get_name(pokedata: Dict):
+    pokeid = pokedata["name"]
+    
+    return pokeid
 
-#get_hp("charizard")
+def get_type(pokedata: Dict):
+    for i in pokedata["types"]:
+        poketype = pokedata["types"][i]["type"]["name"]
 
 
 #Yu-Gi-Oh! API
