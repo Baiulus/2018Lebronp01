@@ -1,24 +1,24 @@
+# Lucas Zheng, Emily Mai, Mycroft Lee, Shafin Kazi
+# SoftDev
+# P01
+# Last updated: 12-10-25
+# 12-22-25
+
 import sqlite3
-import json
 from typing import List, Dict, Optional
 
 DB_FILE = "Lebron.db"
+
+#Could change to be in method if multiple users to prevent them from using same cursor
 db = sqlite3.connect(DB_FILE, check_same_thread=False)
 cursor = db.cursor()
-db.row_factory = sqlite3.Row
-
-# May reaplce
-def get_connection():
-    db.row_factory = sqlite3.Row  # Return rows as dictionaries
-    return db
-
+db.row_factory = sqlite3.Row 
 
 # User Methods
 
 
 # Get user by username
 def get_user(username: str) -> Optional[Dict]: #can return [dict] or [none]
-    db = get_connection()
 
     cursor.execute(
         "SELECT username, created_at FROM users WHERE username = ?", (username,)
@@ -31,7 +31,6 @@ def get_user(username: str) -> Optional[Dict]: #can return [dict] or [none]
 
 # Creates new unique user
 def create_user(username: str, password_hash: str) -> bool: #return [boolean]
-    conn = get_connection()
 
     try:
         cursor.execute(
@@ -51,7 +50,6 @@ def create_user(username: str, password_hash: str) -> bool: #return [boolean]
 
 # Get character by ID
 def get_character_by_id(char_id: int) -> Optional[Dict]:
-    conn = get_connection()
 
     cursor.execute("SELECT * FROM chars WHERE id = ?", (char_id,))
     row = cursor.fetchone()
@@ -64,7 +62,6 @@ def get_character_by_id(char_id: int) -> Optional[Dict]:
 def get_characters_by_universe(
     universe: str, limit: int = 50 #can only return max 50 items
 ) -> List[Dict]:  # Change limit?
-    conn = get_connection()
 
     cursor.execute(
         "SELECT * FROM chars WHERE universe = ? ORDER BY charname LIMIT ?",
@@ -78,7 +75,6 @@ def get_characters_by_universe(
 
 # Search characters by name
 def search_characters(query: str, limit: int = 20) -> List[Dict]:  # Change limit?
-    conn = get_connection()
 
     cursor.execute(
         "SELECT * FROM chars WHERE charname LIKE ? ORDER BY charname LIMIT ?",
@@ -92,7 +88,6 @@ def search_characters(query: str, limit: int = 20) -> List[Dict]:  # Change limi
 
 # Get all characters
 def get_all_characters(limit: int = 100) -> List[Dict]:  # Change limit?
-    conn = get_connection()
 
     cursor.execute("SELECT * FROM chars ORDER BY universe, charname LIMIT ?", (limit,))
     rows = cursor.fetchall()
@@ -103,7 +98,6 @@ def get_all_characters(limit: int = 100) -> List[Dict]:  # Change limit?
 
 # Add new character to database
 def add_character(character_data: Dict) -> int: #character_data as dictionary data from the api
-    conn = get_connection()
 
     try:
         cursor.execute(
@@ -145,7 +139,6 @@ def add_character(character_data: Dict) -> int: #character_data as dictionary da
 
 # Get user's team
 def get_user_team(username: str) -> Optional[Dict]:
-    conn = get_connection()
 
     cursor.execute("SELECT * FROM teams WHERE teamuser = ?", (username,))
     row = cursor.fetchone()
@@ -167,8 +160,8 @@ def get_user_team(username: str) -> Optional[Dict]:
     cursor.close()
     return team
 
-def create_team(username: str, character_ids: List[int], teamname: str = "Placeholder") -> None:
-    conn = get_connection()
+# Create new team
+def create_team(username: str, character_ids: List[int], teamname: str = "Placeholder") -> None: # Can change hint for debugging
 
     cursor.execute(
         """
@@ -187,6 +180,28 @@ def create_team(username: str, character_ids: List[int], teamname: str = "Placeh
     db.commit()
     cursor.close()
 
-#def edit_team(username: str, character_ids: List[int])
+# Edit user team
+def edit_team(username: str, character_ids: List[int]) -> None: # Can change hint for debugging
+    cursor.execute(
+        """
+            UPDATE teams SET
+            teamname = ?,
+            teamslot1 = ?,
+            teamslot2 = ?,
+            teamslot3 = ?
+            WHERE teamuser = ?
+            """,
+            (
+             teamname,
+             character_ids[0],
+             character_ids[1],
+             character_ids[2],
+             username,
+            )
+        )
+
+    db.commit()
+    cursor.close()            
+
 
     
