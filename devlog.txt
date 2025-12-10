@@ -103,3 +103,6 @@ lucasZ -- 2025-12-10 00:00
 emilyM - 2025-12-10 05:10
 - added method to get card data from the Yu-Gi-Oh! API
 - put card data into roster table
+
+shafinK -- 2025-12-10 10:57
+- fixed image formatting on Roster

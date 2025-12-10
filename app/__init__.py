@@ -97,10 +97,10 @@ def disp_roster():
         for char in chars:
             table += f"""<tr class="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default hover:bg-red-500 hover:text-neutral-50">
                             <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                                {char[0]}"
+                                {char[0]}
                             </th>
                             <td class="px-6 py-4">
-                                "<img class="w-full h-8 object-cover"src = {char[1]}>
+                                <img class="w-24 h-32 object-cover"src = {char[1]}>
                             </td>
                             <td class="px-6 py-4">
                                 {char[3]}
@@ -116,6 +116,14 @@ def disp_roster():
                             </td>
                         </tr>"""
         return render_template("roster.html", table = table)
+    else:
+        return redirect(url_for("auth.login_get"))
+
+
+@app.route("/teamselect")
+def disp_teamselect():
+    if session.get("username"):
+        return render_template("teamselect.html")
     else:
         return redirect(url_for("auth.login_get"))
 
