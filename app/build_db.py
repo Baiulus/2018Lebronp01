@@ -7,19 +7,19 @@ from typing import List, Dict, Optional
 def apiformat(link: str) -> Optional[Dict]: #example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
     dataraw = requests.get(link)
     data = dataraw.json()
-    
+
     return data
 
 #POKEMON
 def get_hp(pokemon: str):
     pokemonurl = "https://pokeapi.co/api/v2/pokemon/" + pokemon
     pokedata = apiformat(pokemonurl)
-    
+
     statname = pokedata
-    
+
     hp = pokedata["stats"][0]
     print(hp)
-    
+
 #get_hp("charizard")
 
 
@@ -48,3 +48,12 @@ def get_yugiohcard():
                 return list
         except:
             continue
+
+#returns list ([charname, imagelink, id, type, attack, hp, universe]) from a random D&D card
+def get_dndcard():
+    url = "https://www.dnd5eapi.co/api/2014/monsters"
+    with urllib.request.urlopen(url) as page:
+        data = json.load(page) #data is a dictionary
+        for i in range(5):
+            data = [results]
+            print(data)
