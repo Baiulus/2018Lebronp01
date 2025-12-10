@@ -96,3 +96,6 @@ shafinK -- 2025-12-09 9:10
 shafinK -- 2025-12-08 10:57
 - added some code to add dummy characters to chars db
 - disp_roster formats chars db into a table and sends it to roster.html
+
+lucasZ -- 2025-12-10 00:00
+- Added method to create team to db.py
