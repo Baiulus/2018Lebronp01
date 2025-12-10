@@ -4,6 +4,7 @@
 from flask import Flask, render_template, request, session, url_for, redirect
 from auth import bp as auth_bp
 import sqlite3, os
+import build_db
 
 # Flask app creation
 app = Flask(__name__)
@@ -85,6 +86,13 @@ def disp_roster():
         table = ""
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
+        #Yu-Gi-Oh! API
+        for i in range(5): #adds 5 random Yu-Gi-Oh! cards to the table
+            data = build_db.get_yugiohcard()
+            c.execute(
+                "insert into chars (charname, imagelink, id, type, attack, hp, genre) values (?, ?, ?, ?, ?, ?, ?)",
+                (data[0], data[1], data[2], data[3], data[4], data[5], data[6])
+            )
         chars = c.execute("select * from chars")
         for char in chars:
             table += f"""<tr class="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default hover:bg-red-500 hover:text-neutral-50">
