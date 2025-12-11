@@ -88,13 +88,14 @@ def disp_roster():
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
         #Yu-Gi-Oh! API
-        for i in range(5): #adds 5 random Yu-Gi-Oh! cards to the table
+        for i in range(1): #adds 5 random Yu-Gi-Oh! cards to the table
             data = build_db.get_yugiohcard()
             c.execute(
                 "insert or ignore into chars (charname, imagelink, id, type, attack, hp, genre) values (?, ?, ?, ?, ?, ?, ?)",
                 (data[0], data[1], data[2], data[3], data[4], data[5], data[6])
             )
         db.commit()
+
 
         if (filter == 'all'):
             chars = c.execute("select * from chars")
@@ -107,6 +108,9 @@ def disp_roster():
                             </th>
                             <td class="px-6 py-4">
                                 <img class="w-24 h-32 object-cover" src={char[1]}>
+                            </td>
+                            <td class="px-6 py-4">
+                                {char[2]}
                             </td>
                             <td class="px-6 py-4">
                                 {char[3]}
