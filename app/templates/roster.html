@@ -13,10 +13,36 @@ Roster
 
 <br> <br> <br> <br> <br>
 
-<div class="flex items-center mb-4">
-    <input checked id="all" type="checkbox" value="" class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium">
-    <label for="all" class="select-none ms-2 text-sm font-medium text-heading">Display all universes</label>
-</div>
+<form method="GET" action="/roster" class="flex justify-between w-4/5 mx-auto mb-4">
+
+    <label class="flex items-center">
+        <input type="radio" name="filter" value="all" checked class="accent-yellow-400">
+        <p class="ms-2">Display all universes</p>
+    </label>
+
+    <label class="flex items-center">
+        <input type="radio" name="filter" value="NBA" class="accent-yellow-400">
+        <p class="ms-2">Display NBA only</p>
+    </label>
+
+    <label class="flex items-center">
+        <input type="radio" name="filter" value="Pokemon" class="accent-yellow-400">
+        <p class="ms-2">Display Pokémon only</p>
+    </label>
+
+    <label class="flex items-center">
+        <input type="radio" name="filter" value="Digimon" class="accent-yellow-400">
+        <p class="ms-2">Display Digimon only</p>
+    </label>
+
+    <label class="flex items-center">
+        <input type="radio" name="filter" value="Yu-Gi-Oh!" class="accent-yellow-400">
+        <p class="ms-2">Display Yu-Gi-Oh! only</p>
+    </label>
+
+    <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">Filter</button>
+</form>
+
 
 <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
     <table class="w-full text-sm text-left rtl:text-right text-body">

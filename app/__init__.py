@@ -46,7 +46,7 @@ cursor.execute(
 #     1000,
 #     1000,
 #     'NBA')""")
-#
+
 # cursor.execute("""insert into chars
 #     (charname,
 #     imagelink,
@@ -84,23 +84,29 @@ def disp_homepage():
 def disp_roster():
     if session.get("username"):
         table = ""
+        filter = request.args.get("filter", "all")
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
         #Yu-Gi-Oh! API
         for i in range(5): #adds 5 random Yu-Gi-Oh! cards to the table
             data = build_db.get_yugiohcard()
             c.execute(
-                "insert into chars (charname, imagelink, id, type, attack, hp, genre) values (?, ?, ?, ?, ?, ?, ?)",
+                "insert or ignore into chars (charname, imagelink, id, type, attack, hp, genre) values (?, ?, ?, ?, ?, ?, ?)",
                 (data[0], data[1], data[2], data[3], data[4], data[5], data[6])
             )
-        chars = c.execute("select * from chars")
+        db.commit()
+
+        if (filter == 'all'):
+            chars = c.execute("select * from chars")
+        else:
+            chars = c.execute("select * from chars where genre = ?", (filter, ))
         for char in chars:
             table += f"""<tr class="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default hover:bg-red-500 hover:text-neutral-50">
                             <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                                 {char[0]}
                             </th>
                             <td class="px-6 py-4">
-                                <img class="w-24 h-32 object-cover"src = {char[1]}>
+                                <img class="w-24 h-32 object-cover" src={char[1]}>
                             </td>
                             <td class="px-6 py-4">
                                 {char[3]}

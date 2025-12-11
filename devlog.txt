@@ -110,3 +110,6 @@ shafinK -- 2025-12-10 10:57
 lucasZ -- 2025-12-10 11:00
 - Added method to edit team to db.py
 - Added comments and QOL changes to db.py
+
+shafinK -- 2025-12-11 3:07
+- added filtering based on universe to roster
