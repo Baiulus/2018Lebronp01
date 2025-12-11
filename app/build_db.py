@@ -39,24 +39,19 @@ def get_type(pokedata: Dict):
 
     return poketypes
 
-def get_pokemon():
-    pokelist = []
-    for j in range(1,152):
-        pokemon = poke_api_format(j)
+def get_pokemon(pokeid: int):
+    pokemon = poke_api_format(pokeid)
 
-        pokehp = get_stat(pokemon, 'hp')
-        pokeattack = get_stat(pokemon, 'attack')
-        pokeid = j
-        pokename = get_name(pokemon)
-        pokeimage = get_image(pokemon)
-        poketype = get_type(pokemon)
-        genre = 'Pokemon'
+    pokehp = get_stat(pokemon, 'hp')
+    pokeattack = get_stat(pokemon, 'attack')
+    pokename = get_name(pokemon)
+    pokeimage = get_image(pokemon)
+    poketype = get_type(pokemon)
+    genre = 'Pokemon'
 
-        pokedata = [pokename, pokeimage, pokeid, poketype, pokeattack, pokehp, genre]
+    pokedata = [pokename, pokeimage, pokeid, poketype, pokeattack, pokehp, genre]
 
-        pokelist.append(pokedata)
-
-    return pokelist
+    return pokedata
 
 
 #Yu-Gi-Oh! API
@@ -108,5 +103,4 @@ def get_dndcard(index): #index should be within 0 and 333
         #print(list)
         return list
 
-for i in range(10):
-    print(get_dndcard(i))
+

@@ -121,3 +121,7 @@ shafinK -- 2025-12-11 12:04
 shafinK -- 2025-12-11 12:30
 - added requests (from build_db.py) to requirements.text
 - started rough work on teamselect.html (how it'll be formatted, no logic yet)
+
+mycroftL -- 2025-12-11 16:17
+- integrated pokemon api data into build.db
+- assisted in dnd api attack data in build.db
