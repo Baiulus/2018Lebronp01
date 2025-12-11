@@ -116,4 +116,8 @@ shafinK -- 2025-12-11 3:07
 
 shafinK -- 2025-12-11 12:04
 - moved roster tablemaking logic to roster.html
-- __init__.py disp_roster less cluttered 
+- __init__.py disp_roster less cluttered
+
+shafinK -- 2025-12-11 12:30
+- added requests (from build_db.py) to requirements.text
+- started rough work on teamselect.html (how it'll be formatted, no logic yet)
