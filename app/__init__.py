@@ -96,36 +96,16 @@ def disp_roster():
             )
         db.commit()
 
-
+        lists = []
         if (filter == 'all'):
             chars = c.execute("select * from chars")
         else:
             chars = c.execute("select * from chars where genre = ?", (filter, ))
         for char in chars:
-            table += f"""<tr class="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default hover:bg-red-500 hover:text-neutral-50">
-                            <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                                {char[0]}
-                            </th>
-                            <td class="px-6 py-4">
-                                <img class="w-24 h-32 object-cover" src={char[1]}>
-                            </td>
-                            <td class="px-6 py-4">
-                                {char[2]}
-                            </td>
-                            <td class="px-6 py-4">
-                                {char[3]}
-                            </td>
-                            <td class="px-6 py-4">
-                                {char[4]}
-                            </td>
-                            <td class="px-6 py-4">
-                                {char[5]}
-                            </td>
-                            <td class="px-6 py-4">
-                                {char[6]}
-                            </td>
-                        </tr>"""
-        return render_template("roster.html", table = table)
+            temp = [char[0], char[1], char[2], char[3], char[4], char[5], char[6]]
+            print(temp)
+            lists.append(temp)
+        return render_template("roster.html", lists = lists)
     else:
         return redirect(url_for("auth.login_get"))
 
@@ -135,6 +115,10 @@ def disp_teamselect():
     if session.get("username"):
         return render_template("teamselect.html")
     else:
+        db = sqlite3.connect(DB_FILE)
+        c = db.cursor()
+        c.execute("insert or ignore into teams values (?, ?, ?, ?)", (session.get('username'), 23, 77, 75064463))
+
         return redirect(url_for("auth.login_get"))
 
 db.commit()
