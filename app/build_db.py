@@ -32,8 +32,31 @@ def get_name(pokedata: Dict):
     return pokeid
 
 def get_type(pokedata: Dict):
+    poketypes =[]
+    
     for i in pokedata["types"]:
-        poketype = pokedata["types"][i]["type"]["name"]
+        poketypes.append(i["type"]["name"])
+    
+    return poketypes
+
+def get_pokemon():
+    pokelist = []
+    for j in range(1,152):
+        pokemon = poke_api_format(j)
+        
+        pokehp = get_stat(pokemon, 'hp')
+        pokeattack = get_stat(pokemon, 'attack')
+        pokeid = j
+        pokename = get_name(pokemon)
+        pokeimage = get_image(pokemon)
+        poketype = get_type(pokemon)
+        genre = 'Pokemon'
+        
+        pokedata = [pokename, pokeimage, pokeid, poketype, pokeattack, pokehp, genre]
+        
+        pokelist.append(pokedata)
+        
+    return pokelist
 
 
 #Yu-Gi-Oh! API
