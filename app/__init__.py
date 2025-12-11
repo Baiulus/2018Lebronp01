@@ -180,6 +180,7 @@ def accessitem_m(
 # --------------------------------------------------------------------------
 # TESTS
 
+build_db.db_insert(build_db.get_pokemon(151))
 
 if __name__ == "__main__":
     app.debug = True

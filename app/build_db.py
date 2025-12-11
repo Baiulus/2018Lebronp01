@@ -1,7 +1,12 @@
 import requests
 import json
 import urllib.request
+import sqlite3, os
 from typing import List, Dict, Optional
+
+DB_FILE = "Lebron.db"
+db = sqlite3.connect(DB_FILE)
+cursor = db.cursor()
 
 #formats api data into a dictionary
 def poke_api_format(pokeid: int) -> Optional[Dict]: #example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
@@ -36,6 +41,7 @@ def get_type(pokedata: Dict):
 
     for i in pokedata["types"]:
         poketypes.append(i["type"]["name"])
+        poketypes = ', '.join(poketypes)
 
     return poketypes
 
@@ -81,7 +87,7 @@ def get_yugiohcard():
             continue
 
 #returns list ([charname, imagelink, id, type, attack, hp, universe]) from a random D&D card
-def get_dndcard(index): #index should be within 0 and 333
+def get_dndcard(index: int): #index should be within 0 and 333
     urlone = "https://www.dnd5eapi.co/api/2014/monsters"
     with urllib.request.urlopen(urlone) as pageone:
         urlpart = json.load(pageone)
@@ -103,4 +109,10 @@ def get_dndcard(index): #index should be within 0 and 333
         #print(list)
         return list
 
-
+def db_insert(data: list):
+    dataformat = str(data).replace('[', ']', '')
+    datastring = ', '.join(dataformat)
+    print(f"insert into chars (" + datastring + ")")
+    cursor.execute(f"insert into chars (" + datastring + ")")
+    
+db_insert(get_pokemon(151))    
