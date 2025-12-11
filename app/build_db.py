@@ -6,10 +6,10 @@ from typing import List, Dict, Optional
 #formats api data into a dictionary
 def poke_api_format(pokeid: int) -> Optional[Dict]: #example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
     pokeurl = "https://pokeapi.co/api/v2/pokemon/" + str(pokeid)
-    
+
     dataraw = requests.get(pokeurl)
     data = dataraw.json()
-    
+
     return data
 
 #POKEMON
@@ -18,17 +18,17 @@ def get_stat(pokedata: Dict, statname: str):
         stat = i["stat"]["name"]
         if stat == statname:
             statvalue = i["base_stat"]
-    
+
     return statvalue
 
 def get_image(pokedata: Dict):
     pokeimage = pokedata["sprites"]["front_default"]
-    
+
     return pokeimage
 
 def get_name(pokedata: Dict):
     pokeid = pokedata["name"]
-    
+
     return pokeid
 
 def get_type(pokedata: Dict):
@@ -62,11 +62,19 @@ def get_yugiohcard():
         except:
             continue
 
-#returns list ([charname, imagelink, id, type, attack, hp, universe]) from a random D&D card
-def get_dndcard():
+#return string of a part of an url
+def get_dndmonsterurl(index): #index should be within 0 and 333
     url = "https://www.dnd5eapi.co/api/2014/monsters"
     with urllib.request.urlopen(url) as page:
-        data = json.load(page) #data is a dictionary
-        for i in range(5):
-            data = [results]
-            print(data)
+        data = json.load(page)
+        data = data["results"][index]["url"]
+        print(data)
+        return data
+get_dndmonsterurl(0)
+
+#returns list ([charname, imagelink, id, type, attack, hp, universe]) from a random D&D card
+def get_dndcard(urlpart):
+    url = "https://www.dnd5eapi.co" + urlpart
+    with urllib.request.urlopen(url) as page:
+        data = json.load(page)
+        
