@@ -33,17 +33,17 @@ def get_name(pokedata: Dict):
 
 def get_type(pokedata: Dict):
     poketypes =[]
-    
+
     for i in pokedata["types"]:
         poketypes.append(i["type"]["name"])
-    
+
     return poketypes
 
 def get_pokemon():
     pokelist = []
     for j in range(1,152):
         pokemon = poke_api_format(j)
-        
+
         pokehp = get_stat(pokemon, 'hp')
         pokeattack = get_stat(pokemon, 'attack')
         pokeid = j
@@ -51,11 +51,11 @@ def get_pokemon():
         pokeimage = get_image(pokemon)
         poketype = get_type(pokemon)
         genre = 'Pokemon'
-        
+
         pokedata = [pokename, pokeimage, pokeid, poketype, pokeattack, pokehp, genre]
-        
+
         pokelist.append(pokedata)
-        
+
     return pokelist
 
 
@@ -85,19 +85,27 @@ def get_yugiohcard():
         except:
             continue
 
-#return string of a part of an url
-def get_dndmonsterurl(index): #index should be within 0 and 333
-    url = "https://www.dnd5eapi.co/api/2014/monsters"
-    with urllib.request.urlopen(url) as page:
-        data = json.load(page)
-        data = data["results"][index]["url"]
-        print(data)
-        return data
-get_dndmonsterurl(0)
-
 #returns list ([charname, imagelink, id, type, attack, hp, universe]) from a random D&D card
-def get_dndcard(urlpart):
-    url = "https://www.dnd5eapi.co" + urlpart
-    with urllib.request.urlopen(url) as page:
-        data = json.load(page)
-        
+def get_dndcard(index): #index should be within 0 and 333
+    urlone = "https://www.dnd5eapi.co/api/2014/monsters"
+    with urllib.request.urlopen(urlone) as pageone:
+        urlpart = json.load(pageone)
+        urlpart = urlpart["results"][index]["url"]
+    urltwo = "https://www.dnd5eapi.co" + urlpart
+    with urllib.request.urlopen(urltwo) as pagetwo:
+        data = json.load(pagetwo)
+        charname = data["name"]
+        imagelink = "https://www.dnd5eapi.co" + data["image"]
+        id = index
+        type = data["type"]
+        dice = data["hit_dice"]
+        dicearray = dice.split("d")
+        attack = data["strength"] #placeholder strength for attack
+        hp = data["hit_points"]
+        universe = "D&D"
+        list = [charname, imagelink, id, type, attack, hp, universe]
+        #print(list)
+        return list
+
+for i in range(10):
+    print(get_dndcard(i))
