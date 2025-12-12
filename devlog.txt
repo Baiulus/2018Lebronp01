@@ -131,3 +131,7 @@ shafinK -- 2025-12-11 12:30
 mycroftL -- 2025-12-11 16:17
 - integrated pokemon api data into build.db
 - assisted in dnd api attack data in build.db
+
+shafinK -- 2025-12-12 10:58
+- commented out things that make the code not run
+- fixed field on roster from "digimon" to "dnd"

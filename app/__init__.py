@@ -87,13 +87,13 @@ def disp_roster():
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
         #Yu-Gi-Oh! API
-        for i in range(1): #adds 5 random Yu-Gi-Oh! cards to the table
-            data = build_db.get_yugiohcard()
-            c.execute(
-                "insert into chars (charname, imagelink, id, type, attack, hp, genre) values (?, ?, ?, ?, ?, ?, ?)",
-                (data[0], data[1], data[2], data[3], data[4], data[5], data[6])
-            )
-        db.commit()
+        # for i in range(1): #adds 5 random Yu-Gi-Oh! cards to the table
+        #     data = build_db.get_yugiohcard()
+        #     c.execute(
+        #         "insert into chars (charname, imagelink, id, type, attack, hp, genre) values (?, ?, ?, ?, ?, ?, ?)",
+        #         (data[0], data[1], data[2], data[3], data[4], data[5], data[6])
+        #     )
+        # db.commit()
 
         lists = []
         if (filter == 'all'):
