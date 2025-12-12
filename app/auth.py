@@ -6,6 +6,9 @@ import sqlite3
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 DB_FILE = "Lebron.db"
 
+db = sqlite3.connect(DB_FILE)
+c = db.cursor()
+
 @bp.get('/signup')
 def signup_get():
     return render_template('signup.html')

@@ -101,7 +101,7 @@ def get_dndcard(index: int): #index should be within 0 and 333
         type = data["type"]
         dice = data["hit_dice"]
         dicearray = dice.split("d")
-        dicearray = [ int(x) for x in dicearray ] 
+        dicearray = [ int(x) for x in dicearray ]
         attack = int(dicearray[0] * dicearray[1] / 2)
         hp = data["hit_points"]
         universe = "D&D"
@@ -109,10 +109,17 @@ def get_dndcard(index: int): #index should be within 0 and 333
         #print(list)
         return list
 
-def db_insert(data: list):
-    dataformat = str(data).replace('[', ']', '')
-    datastring = ', '.join(dataformat)
-    print(f"insert into chars (" + datastring + ")")
-    cursor.execute(f"insert into chars (" + datastring + ")")
-    
-db_insert(get_pokemon(151))    
+# def db_insert(data: list):
+#     dataformat = str(data).replace('[', ']', '')
+#     datastring = ', '.join(dataformat)
+#     print(f"insert into chars (" + datastring + ")")
+#     cursor.execute(f"insert into chars (" + datastring + ")")
+#
+# db_insert(get_pokemon(151))
+
+# Build Databse
+
+# cursor.executescript(
+#     """
+#     """
+# )

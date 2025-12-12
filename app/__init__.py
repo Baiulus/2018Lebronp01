@@ -30,39 +30,39 @@ cursor.execute(
 )
 
 # dummy characters to add into table to test formatting on website, leave this pls tyty
-# cursor.execute("""insert into chars
-#     (charname,
-#     imagelink,
-#     id,
-#     type,
-#     attack,
-#     hp,
-#     genre)
-#     values
-#     ('Lebron James',
-#     'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F12%2FLebron-James-Basketball-Player-PNG-Free-Image.png&f=1&nofb=1&ipt=023cda4e59b314393a042362367eff50c06dbad8dd6b2240e63ec9a92ea454aa',
-#     23,
-#     'Cavs',
-#     1000,
-#     1000,
-#     'NBA')""")
+cursor.execute("""insert or ignore into chars
+    (charname,
+    imagelink,
+    id,
+    type,
+    attack,
+    hp,
+    genre)
+    values
+    ('Lebron James',
+    'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F12%2FLebron-James-Basketball-Player-PNG-Free-Image.png&f=1&nofb=1&ipt=023cda4e59b314393a042362367eff50c06dbad8dd6b2240e63ec9a92ea454aa',
+    23,
+    'Cavs',
+    1000,
+    1000,
+    'NBA')""")
 
-# cursor.execute("""insert into chars
-#     (charname,
-#     imagelink,
-#     id,
-#     type,
-#     attack,
-#     hp,
-#     genre)
-#     values
-#     ('Luka Doncic',
-#     'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fathlonsports.com%2F.image%2Far_8%3A10%252Cc_fill%252Ccs_srgb%252Cfl_progressive%252Cg_faces%3Acenter%252Cq_auto%3Agood%252Cw_620%2FMjE0NDY3ODg1NDUwNDA0ODg3%2Fluka-doncic.jpg&f=1&nofb=1&ipt=fd1f2789c9a64264dbda4d835fafd7fefe4c5b12fe01dcd9d6ed2044484cf8d5',
-#     77,
-#     'Lakers',
-#     7777,
-#     7777,
-#     'NBA')""")
+cursor.execute("""insert or ignore into chars
+    (charname,
+    imagelink,
+    id,
+    type,
+    attack,
+    hp,
+    genre)
+    values
+    ('Luka Doncic',
+    'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fathlonsports.com%2F.image%2Far_8%3A10%252Cc_fill%252Ccs_srgb%252Cfl_progressive%252Cg_faces%3Acenter%252Cq_auto%3Agood%252Cw_620%2FMjE0NDY3ODg1NDUwNDA0ODg3%2Fluka-doncic.jpg&f=1&nofb=1&ipt=fd1f2789c9a64264dbda4d835fafd7fefe4c5b12fe01dcd9d6ed2044484cf8d5',
+    77,
+    'Lakers',
+    7777,
+    7777,
+    'NBA')""")
 
 # ^ creates the [chars] table, with columns [charactername], [imagelink] (just a link to the image URL), [primary key]-[id], [type], [attack], [hp], [genre]
 # DEVNOTE - CREATE A WAY TO COUNT IDS SO THERES NO OVERLAP WITH ID NUMBERS
@@ -83,7 +83,6 @@ def disp_homepage():
 @app.route("/roster")
 def disp_roster():
     if session.get("username"):
-        table = ""
         filter = request.args.get("filter", "all")
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
@@ -91,7 +90,7 @@ def disp_roster():
         for i in range(1): #adds 5 random Yu-Gi-Oh! cards to the table
             data = build_db.get_yugiohcard()
             c.execute(
-                "insert or ignore into chars (charname, imagelink, id, type, attack, hp, genre) values (?, ?, ?, ?, ?, ?, ?)",
+                "insert into chars (charname, imagelink, id, type, attack, hp, genre) values (?, ?, ?, ?, ?, ?, ?)",
                 (data[0], data[1], data[2], data[3], data[4], data[5], data[6])
             )
         db.commit()
@@ -103,7 +102,6 @@ def disp_roster():
             chars = c.execute("select * from chars where genre = ?", (filter, ))
         for char in chars:
             temp = [char[0], char[1], char[2], char[3], char[4], char[5], char[6]]
-            print(temp)
             lists.append(temp)
         return render_template("roster.html", lists = lists)
     else:
@@ -180,7 +178,7 @@ def accessitem_m(
 # --------------------------------------------------------------------------
 # TESTS
 
-build_db.db_insert(build_db.get_pokemon(151))
+# build_db.db_insert(build_db.get_pokemon(151))
 
 if __name__ == "__main__":
     app.debug = True
