@@ -30,7 +30,7 @@ Team Select
     </label>
 
     <label class="flex items-center">
-        <input type="radio" name="filter" value="D&D" class="accent-yellow-400">
+        <input type="radio" name="filter" value="DND" class="accent-yellow-400">
         <p class="ms-2">Display DND only</p>
     </label>
 
@@ -42,33 +42,45 @@ Team Select
     <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">Filter</button>
 </form>
 
-<br>
+<form method="POST" action="/teamselect">
 
-<div class="flex w-4/5 mx-auto flex-row items-center justify-center">
-
-  <div class="grid grid-cols-6">
-
-    {% for list in lists %}
-    <div class="col-span-1">
-      <div class="rounded shadow-lg ms-2 items-center p-2">
-        <div class="flex items-center">
-          <img class="w-24 h-32 object-cover" src="{{list[1]}}">
-          <div class="px-2">
-            <button type="submit" 
-                    class="bg-yellow-400 hover:bg-yellow-600 active:bg-yellow-600 font-bold py-1 px-2 rounded transition duration-200 hover:scale-105"
-                    onclick="this.classList.toggle('bg-yellow-600')">
-            Add to team</button>
-          </div>
+  {% with messages = get_flashed_messages() %} 
+      {% if messages %}
+      <div class="space-y-4 mt-4">
+        {% for message in messages %}
+        <div
+          class="flex w-4/5 mx-auto px-4 py-3 rounded bg-red-100 border border-red-400 text-red-700"
+          role="alert"
+        >
+          {{ message }}
         </div>
-        <p class="text-center font-semibold">{{list[2]}} | {{list[0]}}</p>
+        {% endfor %}
       </div>
-    </div>
-    {% endfor %}
+      {% endif %} 
+    {% endwith %}
 
-
+  <div class="flex justify-center mt-4 mb-4">
+    <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">Submit Team</button>
   </div>
 
-</div>
+  <div class="flex w-4/5 mx-auto flex-row items-center justify-center">
+    <div class="grid grid-cols-6">
+      {% for list in lists %}
+      <div class="col-span-1">
+        <div class="rounded shadow-lg ms-2 items-center p-2 text-center">
+          <img class="w-24 h-32 object-cover mx-auto" src="{{list[1]}}">
+          <p class="font-semibold">{{list[2]}} | {{list[0]}}</p>
+          <label class="block mt-2">
+            <input type="checkbox" name="team" value="{{list[2]}}" class="accent-yellow-400">
+            Add to team
+          </label>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</form>
+
 
 
 {% endblock %}

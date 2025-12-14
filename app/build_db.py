@@ -104,7 +104,7 @@ def get_dndcard(index: int): #index should be within 0 and 333
         dicearray = [ int(x) for x in dicearray ]
         attack = int(dicearray[0] * dicearray[1] / 2)
         hp = data["hit_points"]
-        universe = "D&D"
+        universe = "DND"
         list = [charname, imagelink, id, type, attack, hp, universe]
         #print(list)
         return list

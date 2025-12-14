@@ -1,7 +1,7 @@
 # GLOBALS
 
 # import
-from flask import Flask, render_template, request, session, url_for, redirect
+from flask import Flask, render_template, request, session, url_for, redirect, flash
 from auth import bp as auth_bp
 import sqlite3, os
 import build_db
@@ -94,7 +94,6 @@ def disp_roster():
         #         (data[0], data[1], data[2], data[3], data[4], data[5], data[6])
         #     )
         # db.commit()
-
         lists = []
         if (filter == 'all'):
             chars = c.execute("select * from chars")
@@ -108,22 +107,33 @@ def disp_roster():
         return redirect(url_for("auth.login_get"))
 
 
-@app.route("/teamselect")
+@app.route("/teamselect", methods = ['GET', 'POST'])
 def disp_teamselect():
     if session.get("username"):
-        db = sqlite3.connect(DB_FILE)
-        c = db.cursor()
-        # c.execute("insert or ignore into teams values (?, ?, ?, ?)", (session.get('username'), 23, 77, 75064463))
-        filter = request.args.get("filter", "all")
-        lists = []
-        if (filter == 'all'):
-            chars = c.execute("select * from chars")
+        if (request.method == 'POST'):
+            selected = request.form.getlist("team")
+            if (len(selected) != 3):
+                flash("Please select exactly 3 team members.")
+                return(redirect(url_for('disp_teamselect')))
+            db = sqlite3.connect(DB_FILE)
+            c = db.cursor()
+            c.execute("insert into teams values(?, ?, ?, ?)", (session.get('username'), selected[0], selected[1], selected[2]))
+            db.commit()
+            db.close()
+            return render_template('homepage.html')
         else:
-            chars = c.execute("select * from chars where genre = ?", (filter, ))
-        for char in chars:
-            temp = [char[0], char[1], char[2]]
-            lists.append(temp)
-        return render_template("teamselect.html", lists = lists)
+            db = sqlite3.connect(DB_FILE)
+            c = db.cursor()
+            filter = request.args.get("filter", "all")
+            lists = []
+            if (filter == 'all'):
+                chars = c.execute("select * from chars")
+            else:
+                chars = c.execute("select * from chars where genre = ?", (filter,))
+            for char in chars:
+                temp = [char[0], char[1], char[2]]
+                lists.append(temp)
+            return render_template("teamselect.html", lists = lists)
     else:
         return redirect(url_for("auth.login_get"))
 
