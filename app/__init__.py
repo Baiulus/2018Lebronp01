@@ -111,12 +111,20 @@ def disp_roster():
 @app.route("/teamselect")
 def disp_teamselect():
     if session.get("username"):
-        return render_template("teamselect.html")
-    else:
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
-        c.execute("insert or ignore into teams values (?, ?, ?, ?)", (session.get('username'), 23, 77, 75064463))
-
+        # c.execute("insert or ignore into teams values (?, ?, ?, ?)", (session.get('username'), 23, 77, 75064463))
+        filter = request.args.get("filter", "all")
+        lists = []
+        if (filter == 'all'):
+            chars = c.execute("select * from chars")
+        else:
+            chars = c.execute("select * from chars where genre = ?", (filter, ))
+        for char in chars:
+            temp = [char[0], char[1], char[2]]
+            lists.append(temp)
+        return render_template("teamselect.html", lists = lists)
+    else:
         return redirect(url_for("auth.login_get"))
 
 db.commit()

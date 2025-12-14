@@ -10,64 +10,61 @@ Team Select
 {% endblock %}
 
 {% block content %}
-<br> <br> <br> <br>
+<br> <br> <br> <br> <br>
+
+<form method="GET" action="/teamselect" class="flex justify-between w-4/5 mx-auto mb-4">
+
+    <label class="flex items-center">
+        <input type="radio" name="filter" value="all" checked class="accent-yellow-400">
+        <p class="ms-2">Display all universes</p>
+    </label>
+
+    <label class="flex items-center">
+        <input type="radio" name="filter" value="NBA" class="accent-yellow-400">
+        <p class="ms-2">Display NBA only</p>
+    </label>
+
+    <label class="flex items-center">
+        <input type="radio" name="filter" value="Pokemon" class="accent-yellow-400">
+        <p class="ms-2">Display Pokémon only</p>
+    </label>
+
+    <label class="flex items-center">
+        <input type="radio" name="filter" value="D&D" class="accent-yellow-400">
+        <p class="ms-2">Display DND only</p>
+    </label>
+
+    <label class="flex items-center">
+        <input type="radio" name="filter" value="Yu-Gi-Oh!" class="accent-yellow-400">
+        <p class="ms-2">Display Yu-Gi-Oh! only</p>
+    </label>
+
+    <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">Filter</button>
+</form>
+
+<br>
+
 <div class="flex w-4/5 mx-auto flex-row items-center justify-center">
 
   <div class="grid grid-cols-6">
 
+    {% for list in lists %}
     <div class="col-span-1">
-      <div class="rounded shadow-lg ms-2 flex item-center">
-        <img class="w-24 h-32 object-cover" src="https://compote.slate.com/images/96d554af-9521-4a34-a155-8d64e5ee717e.jpeg?crop=5151%2C3434%2Cx0%2Cy0">
-        <div class="px-6 py-4">
-          <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-1 px-2 rounded transition duration-200 hover:scale-105">Add to team</button>
+      <div class="rounded shadow-lg ms-2 items-center p-2">
+        <div class="flex items-center">
+          <img class="w-24 h-32 object-cover" src="{{list[1]}}">
+          <div class="px-2">
+            <button type="submit" 
+                    class="bg-yellow-400 hover:bg-yellow-600 active:bg-yellow-600 font-bold py-1 px-2 rounded transition duration-200 hover:scale-105"
+                    onclick="this.classList.toggle('bg-yellow-600')">
+            Add to team</button>
+          </div>
         </div>
+        <p class="text-center font-semibold">{{list[2]}} | {{list[0]}}</p>
       </div>
     </div>
+    {% endfor %}
 
-    <div class="col-span-1">
-      <div class="rounded shadow-lg ms-2 flex item-center">
-        <img class="w-24 h-32 object-cover" src="https://compote.slate.com/images/96d554af-9521-4a34-a155-8d64e5ee717e.jpeg?crop=5151%2C3434%2Cx0%2Cy0">
-        <div class="px-6 py-4">
-          <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-1 px-2 rounded transition duration-200 hover:scale-105">Add to team</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-span-1">
-      <div class="rounded shadow-lg ms-2 flex item-center">
-        <img class="w-24 h-32 object-cover" src="https://compote.slate.com/images/96d554af-9521-4a34-a155-8d64e5ee717e.jpeg?crop=5151%2C3434%2Cx0%2Cy0">
-        <div class="px-6 py-4">
-          <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-1 px-2 rounded transition duration-200 hover:scale-105">Add to team</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-span-1">
-      <div class="rounded shadow-lg ms-2 flex item-center">
-        <img class="w-24 h-32 object-cover" src="https://compote.slate.com/images/96d554af-9521-4a34-a155-8d64e5ee717e.jpeg?crop=5151%2C3434%2Cx0%2Cy0">
-        <div class="px-6 py-4">
-          <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-1 px-2 rounded transition duration-200 hover:scale-105">Add to team</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-span-1">
-      <div class="rounded shadow-lg ms-2 flex item-center">
-        <img class="w-24 h-32 object-cover" src="https://compote.slate.com/images/96d554af-9521-4a34-a155-8d64e5ee717e.jpeg?crop=5151%2C3434%2Cx0%2Cy0">
-        <div class="px-6 py-4">
-          <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-1 px-2 rounded transition duration-200 hover:scale-105">Add to team</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-span-1">
-      <div class="rounded shadow-lg ms-2 flex item-center">
-        <img class="w-24 h-32 object-cover" src="https://compote.slate.com/images/96d554af-9521-4a34-a155-8d64e5ee717e.jpeg?crop=5151%2C3434%2Cx0%2Cy0">
-        <div class="px-6 py-4">
-          <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-1 px-2 rounded transition duration-200 hover:scale-105">Add to team</button>
-        </div>
-      </div>
-    </div>
 
   </div>
 
