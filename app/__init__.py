@@ -144,6 +144,25 @@ def disp_showdown():
     else:
         return redirect(url_for("auth.login_get"))
 
+@app.route("/viewteam", methods = ['GET', 'POST'])
+def disp_viewteam():
+    if session.get("username"):
+        filter = request.args.get("filter", "all")
+        lists = []
+        db = sqlite3.connect(DB_FILE)
+        c = db.cursor()
+        if (filter == 'all'):
+            teams = c.execute("select * from teams")
+        else:
+            teams = c.execute("select * from teams where teamuser = ?", (session.get('username'),))
+        for team in teams:
+            temp = [team[0], team[1], team[2], team[3]]
+            lists.append(temp)
+        db.close()
+        return render_template("viewteam.html", lists = lists)
+    else:
+        return redirect(url_for("auth.login_get"))
+
 db.commit()
 db.close()
 

@@ -137,8 +137,12 @@ shafinK -- 2025-12-12 10:58
 - fixed field on roster from "digimon" to "dnd"
 
 shafinK -- 2025-12-14 6:53
-- copied filter to teamselect 
-- continuted work on formatting teamselect 
+- copied filter to teamselect
+- continuted work on formatting teamselect
 
 shafinK -- 2025-12-14 9:57
 - finished teamselect.html
+
+shafinK -- 2025-12-15 10:55
+- created viewteam
+- added filter to disp own teams vs all teams
