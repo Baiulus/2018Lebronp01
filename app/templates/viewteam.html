@@ -36,6 +36,15 @@ View Teams
                     Team Owner
                 </th>
                 <th scope="col" class="px-6 py-3 font-medium">
+                    Team member 1
+                </th>
+                <th scope="col" class="px-6 py-3 font-medium">
+                    Team member 2
+                </th>
+                <th scope="col" class="px-6 py-3 font-medium">
+                    Team member 3
+                </th>
+                <th scope="col" class="px-6 py-3 font-medium">
                     Team member 1 ID
                 </th>
                 <th scope="col" class="px-6 py-3 font-medium">
@@ -43,6 +52,9 @@ View Teams
                 </th>
                 <th scope="col" class="px-6 py-3 font-medium">
                     Team member 3 ID
+                </th>
+                <th scope="col" class="px-6 py-3 font-medium">
+
                 </th>
             </tr>
         </thead>
@@ -53,6 +65,15 @@ View Teams
                 {{list[0]}}
             </th>
             <td class="px-6 py-4">
+                {{list[4]}}
+            </td>
+            <td class="px-6 py-4">
+                {{list[5]}}
+            </td>
+            <td class="px-6 py-4">
+                {{list[6]}}
+            </td>
+            <td class="px-6 py-4">
                 {{list[1]}}
             </td>
             <td class="px-6 py-4">
@@ -60,6 +81,12 @@ View Teams
             </td>
             <td class="px-6 py-4">
                 {{list[3]}}
+            </td>
+            <td class="px-6 py-4">
+              <form method="POST" action="/deleteteam" class="flex justify-between w-4/5 mx-auto mb-4">
+                <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">Delete</button>
+              </form>
+            </td>
           </tr>
         {% endfor %}
         </tbody>

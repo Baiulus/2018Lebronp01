@@ -157,11 +157,23 @@ def disp_viewteam():
             teams = c.execute("select * from teams where teamuser = ?", (session.get('username'),))
         for team in teams:
             temp = [team[0], team[1], team[2], team[3]]
+            chars = [team[1], team[2], team[3]]
+            db2 = sqlite3.connect(DB_FILE)
+            c2 = db.cursor()
+            for char in chars:
+                c2.execute("select charname from chars where id = ?", (char,))
+                name = c2.fetchone()[0]
+                temp.append(name)
+            db2.close()
             lists.append(temp)
         db.close()
         return render_template("viewteam.html", lists = lists)
     else:
         return redirect(url_for("auth.login_get"))
+
+@app.route("/deleteteam", methods = ['GET', 'POST'])
+def delteteam():
+    return render_template("homepage.html")
 
 db.commit()
 db.close()
