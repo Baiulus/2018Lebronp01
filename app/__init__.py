@@ -87,7 +87,7 @@ def disp_roster():
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
         #Yu-Gi-Oh! API
-        # for i in range(1): #adds 5 random Yu-Gi-Oh! cards to the table
+        # for i in range(5): #adds 5 random Yu-Gi-Oh! cards to the table
         #     data = build_db.get_yugiohcard()
         #     c.execute(
         #         "insert into chars (charname, imagelink, id, type, attack, hp, genre) values (?, ?, ?, ?, ?, ?, ?)",
@@ -134,6 +134,13 @@ def disp_teamselect():
                 temp = [char[0], char[1], char[2]]
                 lists.append(temp)
             return render_template("teamselect.html", lists = lists)
+    else:
+        return redirect(url_for("auth.login_get"))
+
+@app.route("/showdown")
+def disp_showdown():
+    if session.get("username"):
+        return render_template("showdown.html")
     else:
         return redirect(url_for("auth.login_get"))
 
