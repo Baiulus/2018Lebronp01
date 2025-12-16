@@ -119,7 +119,27 @@ def get_dndcard(index: int): #index should be within 0 and 333
 
 # Build Databse
 
-# cursor.executescript(
-#     """
-#     """
-# )
+cursor.executescript(
+    """
+    DROP TABLE IF EXISTS profiles;
+    CREATE TABLE profiles (
+    username TEXT PRIMARY KEY, 
+    password TEXT
+    );
+    """
+)
+
+#cursor.executescript(
+#    """
+#    DROP TABLE IF EXISTS yugioh_characters;
+#    CREATE TABLE yugioh_characters (
+#    name TEXT UNIQUE, 
+#    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+#    image TEXT, 
+#    hitpoints REAL,  
+#    FOREIGN KEY () REFERENCES yugioh_characters(id)
+#    );
+#    """
+#)
+
+
