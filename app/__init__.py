@@ -18,15 +18,27 @@ cursor = db.cursor()
 
 # db - table creation
 cursor.execute(
-    f"create table if not exists users (username text primary key unique, password text)"
+    f"""create table if not exists users (username text 
+                                        primary key unique, 
+                                        password text)"""
 )  # creates the [users] table, with columns: [unique primary key]-[username] and [password]
 cursor.execute(
-    f"create table if not exists teams (teamuser text references users(username), teamslot1 integer references chars(id), teamslot2 integer references chars(id), teamslot3 integer references chars(id))"
+    f"""create table if not exists teams (teamuser text references users(username), 
+                                                      teamslot1 integer references chars(id), 
+                                                      teamslot2 integer references chars(id), 
+                                                      teamslot3 integer references chars(id), 
+                                                      teamid integer primary key autoincrement)"""
 )
 # ^ creates the [teams] table, with columns [foreign key [username] from users table]-[teamuser], [foreign key [id] from chars table]-[teamslot1, 2, 3]
 # teamuser is taken from a username in the users table and is the name of the user that owns/made the team, the teamslots 1-3 is made to link a pokemon/digimon/yugioh monster from the chars table by id
 cursor.execute(
-    f"create table if not exists chars (charname text, imagelink text, id integer primary key, type text, attack integer, hp integer, genre text)"
+    f"""create table if not exists chars (charname text, 
+                                        imagelink text, 
+                                        id integer primary key, 
+                                        type text, 
+                                        attack integer, 
+                                        hp integer, 
+                                        genre text)"""
 )
 
 # dummy characters to add into table to test formatting on website, leave this pls tyty
@@ -117,7 +129,7 @@ def disp_teamselect():
                 return(redirect(url_for('disp_teamselect')))
             db = sqlite3.connect(DB_FILE)
             c = db.cursor()
-            c.execute("insert into teams values(?, ?, ?, ?)", (session.get('username'), selected[0], selected[1], selected[2]))
+            c.execute("insert into teams (teamuser, teamslot1, teamslot2, teamslot3) values(?, ?, ?, ?)", (session.get('username'), selected[0], selected[1], selected[2]))
             db.commit()
             db.close()
             return render_template('homepage.html')
@@ -133,6 +145,7 @@ def disp_teamselect():
             for char in chars:
                 temp = [char[0], char[1], char[2]]
                 lists.append(temp)
+            db.close()
             return render_template("teamselect.html", lists = lists)
     else:
         return redirect(url_for("auth.login_get"))
@@ -147,15 +160,12 @@ def disp_showdown():
 @app.route("/viewteam", methods = ['GET', 'POST'])
 def disp_viewteam():
     if session.get("username"):
-        filter = request.args.get("filter", "all")
         lists = []
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
-        if (filter == 'all'):
-            teams = c.execute("select * from teams")
-        else:
-            teams = c.execute("select * from teams where teamuser = ?", (session.get('username'),))
+        teams = c.execute("select * from teams where teamuser = ?", (session.get('username'),))
         for team in teams:
+            print(team)
             temp = [team[0], team[1], team[2], team[3]]
             chars = [team[1], team[2], team[3]]
             db2 = sqlite3.connect(DB_FILE)
@@ -165,6 +175,7 @@ def disp_viewteam():
                 name = c2.fetchone()[0]
                 temp.append(name)
             db2.close()
+            temp.append(team[4])
             lists.append(temp)
         db.close()
         return render_template("viewteam.html", lists = lists)
@@ -173,7 +184,16 @@ def disp_viewteam():
 
 @app.route("/deleteteam", methods = ['GET', 'POST'])
 def delteteam():
-    return render_template("homepage.html")
+    if session.get('username'):
+        id = request.form.get('id')
+        db = sqlite3.connect(DB_FILE)
+        c = db.cursor()
+        c.execute("delete from teams where teamid = ? and teamuser = ?", (id, session.get('username')))
+        db.commit()
+        db.close()
+        return redirect(url_for("disp_viewteam"))
+    else:
+        return redirect(url_for("auth.login_get"))
 
 db.commit()
 db.close()
