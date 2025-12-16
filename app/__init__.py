@@ -18,26 +18,26 @@ cursor = db.cursor()
 
 # db - table creation
 cursor.execute(
-    f"""create table if not exists users (username text 
-                                        primary key unique, 
+    f"""create table if not exists users (username text
+                                        primary key unique,
                                         password text)"""
 )  # creates the [users] table, with columns: [unique primary key]-[username] and [password]
 cursor.execute(
-    f"""create table if not exists teams (teamuser text references users(username), 
-                                                      teamslot1 integer references chars(id), 
-                                                      teamslot2 integer references chars(id), 
-                                                      teamslot3 integer references chars(id), 
+    f"""create table if not exists teams (teamuser text references users(username),
+                                                      teamslot1 integer references chars(id),
+                                                      teamslot2 integer references chars(id),
+                                                      teamslot3 integer references chars(id),
                                                       teamid integer primary key autoincrement)"""
 )
 # ^ creates the [teams] table, with columns [foreign key [username] from users table]-[teamuser], [foreign key [id] from chars table]-[teamslot1, 2, 3]
 # teamuser is taken from a username in the users table and is the name of the user that owns/made the team, the teamslots 1-3 is made to link a pokemon/digimon/yugioh monster from the chars table by id
 cursor.execute(
-    f"""create table if not exists chars (charname text, 
-                                        imagelink text, 
-                                        id integer primary key, 
-                                        type text, 
-                                        attack integer, 
-                                        hp integer, 
+    f"""create table if not exists chars (charname text,
+                                        imagelink text,
+                                        id integer primary key,
+                                        type text,
+                                        attack integer,
+                                        hp integer,
                                         genre text)"""
 )
 
@@ -150,23 +150,21 @@ def disp_teamselect():
     else:
         return redirect(url_for("auth.login_get"))
 
-@app.route("/showdown")
-def disp_showdown():
-    if session.get("username"):
-        return render_template("showdown.html")
-    else:
-        return redirect(url_for("auth.login_get"))
 
 @app.route("/viewteam", methods = ['GET', 'POST'])
 def disp_viewteam():
     if session.get("username"):
+        filter = request.args.get("filter", "all")
         lists = []
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
-        teams = c.execute("select * from teams where teamuser = ?", (session.get('username'),))
+        if (filter == 'all'):
+            teams = c.execute("select * from teams")
+        else:
+            teams = c.execute("select * from teams where teamuser = ?", (session.get('username'),))
         for team in teams:
             print(team)
-            temp = [team[0], team[1], team[2], team[3]]
+            temp = [team[0]]
             chars = [team[1], team[2], team[3]]
             db2 = sqlite3.connect(DB_FILE)
             c2 = db.cursor()
@@ -192,6 +190,43 @@ def delteteam():
         db.commit()
         db.close()
         return redirect(url_for("disp_viewteam"))
+    else:
+        return redirect(url_for("auth.login_get"))
+
+@app.route("/showdownselect")
+def disp_showdownselect():
+    if session.get("username"):
+        filter = request.args.get("filter", "all")
+        lists = []
+        db = sqlite3.connect(DB_FILE)
+        c = db.cursor()
+        if (filter == 'all'):
+            teams = c.execute("select * from teams")
+        else:
+            teams = c.execute("select * from teams where teamuser = ?", (session.get('username'),))
+        for team in teams:
+            print(team)
+            temp = [team[0]]
+            chars = [team[1], team[2], team[3]]
+            db2 = sqlite3.connect(DB_FILE)
+            c2 = db.cursor()
+            for char in chars:
+                c2.execute("select charname from chars where id = ?", (char,))
+                name = c2.fetchone()[0]
+                temp.append(name)
+            db2.close()
+            temp.append(team[4])
+            lists.append(temp)
+        db.close()
+        db.close()
+        return render_template("showdownselect.html", lists = lists)
+    else:
+        return redirect(url_for("auth.login_get"))
+
+@app.route("/showdown")
+def disp_showdown():
+    if session.get("username"):
+        return render_template("showdown.html")
     else:
         return redirect(url_for("auth.login_get"))
 

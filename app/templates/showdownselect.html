@@ -6,14 +6,13 @@
 {% extends "base.html" %}
 
 {% block title %}
-View Teams
+Select Team
 {% endblock %}
 
 {% block content %}
-
 <br> <br> <br> <br> <br>
 
-<form method="GET" action="/viewteam" class="flex justify-between w-4/5 mx-auto mb-4">
+<form method="GET" action="/showdownselect" class="flex justify-between w-4/5 mx-auto mb-4">
 
     <label class="flex items-center">
         <input type="radio" name="filter" value="all" checked class="accent-yellow-400">
@@ -27,6 +26,10 @@ View Teams
 
     <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">Filter</button>
 </form>
+
+<div class="flex justify-center mt-4 mb-4">
+  <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">Submit Team</button>
+</div>
 
 <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
     <table class="w-full text-sm text-left rtl:text-right text-body">
@@ -48,6 +51,7 @@ View Teams
         </thead>
         <tbody>
           {% for list in lists %}
+          <form method="POST" action="/deleteteam">
           <tr class="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default hover:bg-red-500 hover:text-neutral-50">
             <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                 {{list[0]}}
@@ -62,18 +66,14 @@ View Teams
                 {{list[3]}}
             </td>
             <td class="px-6 py-4">
-              <form method="POST" action="/deleteteam">
-                <input type="hidden" name="id" value="{{ list[4] }}">
-                <button type="submit"
-                    class="bg-yellow-400 hover:bg-yellow-600 font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">
-                    Delete
-                </button>
-            </form>
+              <label class="block mt-2">
+                <input type="checkbox" name="team" value="{{list[2]}}" class="accent-yellow-400">
+              </label>
             </td>
           </tr>
+         </form>
         {% endfor %}
         </tbody>
     </table>
 </div>
-
 {% endblock %}
