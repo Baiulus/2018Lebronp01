@@ -165,3 +165,6 @@ shafinK -- 2025-12-16 21:10
 - added showdowner class for showdown character objects
 - added a setup function to take in selected teams from teamselect
 - showdown takes in two teams with all members as showdown character objects
+
+mycroftL -- 2025-12-16 23:00
+- added API data to builddb.py
