@@ -168,3 +168,6 @@ shafinK -- 2025-12-16 21:10
 
 mycroftL -- 2025-12-16 23:00
 - added API data to builddb.py
+
+lucasZ -- 2025-12-16 23:00
+- Added profiles, characters, moves, and teams databases in build_db.py
