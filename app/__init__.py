@@ -23,15 +23,15 @@ cursor.execute("""insert or ignore into chars
     imagelink,
     id,
     type,
-    attack,
+    atk,
     hp,
-    genre)
+    universe)
     values
     ('Lebron James',
     'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F12%2FLebron-James-Basketball-Player-PNG-Free-Image.png&f=1&nofb=1&ipt=023cda4e59b314393a042362367eff50c06dbad8dd6b2240e63ec9a92ea454aa',
     23,
     'Cavs',
-    1000,
+    50,
     1000,
     'NBA')""")
 
@@ -40,19 +40,36 @@ cursor.execute("""insert or ignore into chars
     imagelink,
     id,
     type,
-    attack,
+    atk,
     hp,
-    genre)
+    universe)
     values
     ('Luka Doncic',
     'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fathlonsports.com%2F.image%2Far_8%3A10%252Cc_fill%252Ccs_srgb%252Cfl_progressive%252Cg_faces%3Acenter%252Cq_auto%3Agood%252Cw_620%2FMjE0NDY3ODg1NDUwNDA0ODg3%2Fluka-doncic.jpg&f=1&nofb=1&ipt=fd1f2789c9a64264dbda4d835fafd7fefe4c5b12fe01dcd9d6ed2044484cf8d5',
     77,
     'Lakers',
-    7777,
-    7777,
+    50,
+    1000,
     'NBA')""")
 
-# ^ creates the [chars] table, with columns [charactername], [imagelink] (just a link to the image URL), [primary key]-[id], [type], [attack], [hp], [genre]
+cursor.execute("""insert or ignore into chars
+    (charname,
+    imagelink,
+    id,
+    type,
+    atk,
+    hp,
+    universe)
+    values
+    ('Jalen Brunson',
+    'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flivesport-ott-images.ssl.cdn.cra.cz%2Fr900xfq60%2F29d1f8e5-186f-4e21-a601-b4341a35f804.jpeg&f=1&nofb=1&ipt=0f88ae2fddf4ca6929075c5deb8447cc6a60e9fde1fdac35ca5eed1a2f089fec',
+    11,
+    'Knicks',
+    50,
+    1000,
+    'NBA')""")
+
+# ^ creates the [chars] table, with columns [charactername], [imagelink] (just a link to the image URL), [primary key]-[id], [type], [atk], [hp], [universe]
 # DEVNOTE - CREATE A WAY TO COUNT IDS SO THERES NO OVERLAP WITH ID NUMBERS
 
 
@@ -76,7 +93,7 @@ def disp_roster():
         # for i in range(5): #adds 5 random Yu-Gi-Oh! cards to the table
         #     data = build_db.get_yugiohcard()
         #     c.execute(
-        #         "insert into chars (charname, imagelink, id, type, attack, hp, genre) values (?, ?, ?, ?, ?, ?, ?)",
+        #         "insert into chars (charname, imagelink, id, type, atk, hp, universe) values (?, ?, ?, ?, ?, ?, ?)",
         #         (data[0], data[1], data[2], data[3], data[4], data[5], data[6])
         #     )
         # db.commit()
@@ -84,7 +101,7 @@ def disp_roster():
         if (filter == 'all'):
             chars = c.execute("select * from chars")
         else:
-            chars = c.execute("select * from chars where genre = ?", (filter, ))
+            chars = c.execute("select * from chars where universe = ?", (filter, ))
         for char in chars:
             temp = [char[0], char[1], char[2], char[3], char[4], char[5], char[6]]
             lists.append(temp)
@@ -115,7 +132,7 @@ def disp_teamselect():
             if (filter == 'all'):
                 chars = c.execute("select * from chars")
             else:
-                chars = c.execute("select * from chars where genre = ?", (filter,))
+                chars = c.execute("select * from chars where universe = ?", (filter,))
             for char in chars:
                 temp = [char[0], char[1], char[2]]
                 lists.append(temp)
@@ -252,9 +269,11 @@ def disp_showdown():
             member2 = showdowner.from_dict(team2[i])
             team1[i] = member1
             team2[i] = member2
-        print(team1[0])
+        print(team1[1])
         team1[0].attack(team1[1])
-        print(team1[0])
+        print(team1[1])
+        session['team1'] = [member.to_dict() for member in team1]
+        session['team2'] = [member.to_dict() for member in team2]
         return render_template("showdown.html", team1 = team1, team2 = team2)
     else:
         return redirect(url_for("auth.login_get"))

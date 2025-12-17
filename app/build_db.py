@@ -148,7 +148,7 @@ cursor.executescript(
 
 cursor.executescript(
     """
-    DROP TABLE IF EXISTS teams
+    DROP TABLE IF EXISTS teams;
     CREATE TABLE teams (
     teamuser TEXT,
     teamslot1 INTEGER,
@@ -179,16 +179,18 @@ cursor.executescript(
     """
     DROP TABLE IF EXISTS chars;
     CREATE TABLE chars (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    universe TEXT,
+    charname TEXT,
+    imagelink TEXT,
+    id INTEGER PRIMARY KEY,
     type TEXT,
-    image_url TEXT,
-    api_id INTEGER,
+    atk INTEGER,
     hp INTEGER,
     moves TEXT,
-    defense INTEGER,
+    universe TEXT,
     FOREIGN KEY (moves) REFERENCES moves(id)
     );
     """
 )
+
+db.commit()
+db.close()
