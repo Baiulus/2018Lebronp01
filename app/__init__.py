@@ -3,7 +3,7 @@
 # import
 from flask import Flask, render_template, request, session, url_for, redirect, flash
 from auth import bp as auth_bp
-import sqlite3, os
+import sqlite3, os, random
 import build_db
 from showdown_character import showdowner
 
@@ -31,7 +31,7 @@ cursor.execute("""insert or ignore into chars
     'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F12%2FLebron-James-Basketball-Player-PNG-Free-Image.png&f=1&nofb=1&ipt=023cda4e59b314393a042362367eff50c06dbad8dd6b2240e63ec9a92ea454aa',
     23,
     'Cavs',
-    50,
+    500,
     1000,
     'NBA')""")
 
@@ -48,7 +48,7 @@ cursor.execute("""insert or ignore into chars
     'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fathlonsports.com%2F.image%2Far_8%3A10%252Cc_fill%252Ccs_srgb%252Cfl_progressive%252Cg_faces%3Acenter%252Cq_auto%3Agood%252Cw_620%2FMjE0NDY3ODg1NDUwNDA0ODg3%2Fluka-doncic.jpg&f=1&nofb=1&ipt=fd1f2789c9a64264dbda4d835fafd7fefe4c5b12fe01dcd9d6ed2044484cf8d5',
     77,
     'Lakers',
-    50,
+    500,
     1000,
     'NBA')""")
 
@@ -65,7 +65,7 @@ cursor.execute("""insert or ignore into chars
     'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flivesport-ott-images.ssl.cdn.cra.cz%2Fr900xfq60%2F29d1f8e5-186f-4e21-a601-b4341a35f804.jpeg&f=1&nofb=1&ipt=0f88ae2fddf4ca6929075c5deb8447cc6a60e9fde1fdac35ca5eed1a2f089fec',
     11,
     'Knicks',
-    50,
+    500,
     1000,
     'NBA')""")
 
@@ -81,6 +81,7 @@ def disp_homepage():
     if session.get("username"):
         return render_template("homepage.html")
     else:
+        session['username'] = 'a'
         return redirect(url_for("auth.login_get"))
 
 @app.route("/roster")
@@ -264,17 +265,30 @@ def disp_showdown():
     if session.get("username"):
         team1 = session.get('team1')
         team2 = session.get('team2')
-        for i in range(3):
-            member1 = showdowner.from_dict(team1[i])
-            member2 = showdowner.from_dict(team2[i])
-            team1[i] = member1
-            team2[i] = member2
-        print(team1[1])
-        team1[0].attack(team1[1])
-        print(team1[1])
+        team1_messages = []
+        team2_messages = []
+        
+        for i in range(len(team1)):
+            member = showdowner.from_dict(team1[i])
+            if (member.hp > 0):
+                team1[i] = member
+            else:
+                team1.pop(i)
+
+        for i in range(len(team2)):
+            member = showdowner.from_dict(team2[i])
+            if (member.hp > 0):
+                team1[i] = member
+            else:
+                team1.pop(i)
+
+        t1m1_attack = random.randint(0, len(team2) - 1)
+        print(t1m1_attack)
+        team1[0].attack(team2[t1m1_attack])
+        team1_messages.append(f"{team1[0].name} attacked {team2[t1m1_attack].name}!")
         session['team1'] = [member.to_dict() for member in team1]
         session['team2'] = [member.to_dict() for member in team2]
-        return render_template("showdown.html", team1 = team1, team2 = team2)
+        return render_template("showdown.html", team1 = team1, team2 = team2, team1_messages = team1_messages, team2_messages = team2_messages)
     else:
         return redirect(url_for("auth.login_get"))
 
