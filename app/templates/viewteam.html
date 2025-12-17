@@ -61,15 +61,17 @@ View Teams
             <td class="px-6 py-4">
                 {{list[3]}}
             </td>
+            {% if list[0] == session['username'] %}
             <td class="px-6 py-4">
               <form method="POST" action="/deleteteam">
                 <input type="hidden" name="id" value="{{ list[4] }}">
                 <button type="submit"
-                    class="bg-yellow-400 hover:bg-yellow-600 font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">
+                    class="bg-yellow-400 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">
                     Delete
                 </button>
             </form>
             </td>
+            {% endif %}
           </tr>
         {% endfor %}
         </tbody>

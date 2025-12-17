@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, session, url_for, redirect, f
 from auth import bp as auth_bp
 import sqlite3, os
 import build_db
+from showdown_character import showdowner
 
 # Flask app creation
 app = Flask(__name__)
@@ -132,7 +133,7 @@ def disp_teamselect():
             c.execute("insert into teams (teamuser, teamslot1, teamslot2, teamslot3) values(?, ?, ?, ?)", (session.get('username'), selected[0], selected[1], selected[2]))
             db.commit()
             db.close()
-            return render_template('homepage.html')
+            return redirect(url_for('disp_showdownselect'))
         else:
             db = sqlite3.connect(DB_FILE)
             c = db.cursor()
@@ -163,7 +164,6 @@ def disp_viewteam():
         else:
             teams = c.execute("select * from teams where teamuser = ?", (session.get('username'),))
         for team in teams:
-            print(team)
             temp = [team[0]]
             chars = [team[1], team[2], team[3]]
             db2 = sqlite3.connect(DB_FILE)
@@ -193,39 +193,89 @@ def delteteam():
     else:
         return redirect(url_for("auth.login_get"))
 
-@app.route("/showdownselect")
+@app.route("/showdownselect", methods = ['GET', 'POST'])
 def disp_showdownselect():
     if session.get("username"):
-        filter = request.args.get("filter", "all")
-        lists = []
+        if (request.method == 'POST'):
+            selected = request.form.getlist("team")
+            if (len(selected) != 2):
+                flash("Please select exactly 2 teams")
+                return redirect(url_for('disp_showdownselect'))
+            team1 = selected[0]
+            team2 = selected[1]
+            return redirect(url_for('setup_teams', team1 = team1, team2 = team2))
+        else:
+            filter = request.args.get("filter", "all")
+            lists = []
+            db = sqlite3.connect(DB_FILE)
+            c = db.cursor()
+            if (filter == 'all'):
+                teams = c.execute("select * from teams")
+            else:
+                teams = c.execute("select * from teams where teamuser = ?", (session.get('username'),))
+            for team in teams:
+                temp = [team[0]]
+                chars = [team[1], team[2], team[3]]
+                db2 = sqlite3.connect(DB_FILE)
+                c2 = db.cursor()
+                for char in chars:
+                    c2.execute("select charname from chars where id = ?", (char,))
+                    name = c2.fetchone()[0]
+                    temp.append(name)
+                db2.close()
+                temp.append(team[4])
+                lists.append(temp)
+            db.close()
+            db.close()
+            return render_template("showdownselect.html", lists = lists)
+    else:
+        return redirect(url_for("auth.login_get"))
+    
+
+@app.route("/setup")
+def setup_teams():
+    if session.get("username"):
+        team1_id = request.args.get("team1")
+        team2_id = request.args.get("team2")
+        team1 = []
+        team2 = []
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
-        if (filter == 'all'):
-            teams = c.execute("select * from teams")
-        else:
-            teams = c.execute("select * from teams where teamuser = ?", (session.get('username'),))
-        for team in teams:
-            print(team)
-            temp = [team[0]]
-            chars = [team[1], team[2], team[3]]
-            db2 = sqlite3.connect(DB_FILE)
+
+        c.execute("select * from teams where teamid = ?", (team1_id,))
+        temp1 = c.fetchone()
+        team1_ids = [temp1[1], temp1[2], temp1[3]]
+        for id in team1_ids:
             c2 = db.cursor()
-            for char in chars:
-                c2.execute("select charname from chars where id = ?", (char,))
-                name = c2.fetchone()[0]
-                temp.append(name)
-            db2.close()
-            temp.append(team[4])
-            lists.append(temp)
+            c2.execute("select * from chars where id = ?", (id,))
+            char = c2.fetchone()
+            temp = showdowner(char[0], char[4], char[5])
+            team1.append(temp.to_dict())
+
+        c.execute("select * from teams where teamid = ?", (team2_id,))
+        temp2 = c.fetchone()
+        team2_ids = [temp2[1], temp2[2], temp2[3]]
+        for id in team2_ids:
+            c2 = db.cursor()
+            c2.execute("select * from chars where id = ?", (id,))
+            char = c2.fetchone()
+            temp = showdowner(char[0], char[4], char[5])
+            team2.append(temp.to_dict())
+
+        session['team1'] = team1
+        session['team2'] = team2
         db.close()
-        db.close()
-        return render_template("showdownselect.html", lists = lists)
+        return redirect(url_for("disp_showdown"))
     else:
         return redirect(url_for("auth.login_get"))
 
 @app.route("/showdown")
 def disp_showdown():
     if session.get("username"):
+        team1 = session.get('team1')
+        for member in team1:
+            member = showdowner.from_dict(member)
+            print(member)
         return render_template("showdown.html")
     else:
         return redirect(url_for("auth.login_get"))

@@ -27,8 +27,27 @@ Select Team
     <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">Filter</button>
 </form>
 
+
+<form method="POST" action="/showdownselect">
+
+{% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <div class="space-y-4 mt-4">
+        {% for message in messages %}
+        <div
+          class="flex w-4/5 mx-auto px-4 py-3 rounded bg-red-100 border border-red-400 text-red-700"
+          role="alert"
+        >
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endwith %}
+
+
 <div class="flex justify-center mt-4 mb-4">
-  <button type="submit" class="bg-yellow-400 hover:bg-yellow-600 font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">Submit Team</button>
+  <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">Submit Team</button>
 </div>
 
 <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
@@ -51,7 +70,7 @@ Select Team
         </thead>
         <tbody>
           {% for list in lists %}
-          <form method="POST" action="/deleteteam">
+          
           <tr class="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default hover:bg-red-500 hover:text-neutral-50">
             <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                 {{list[0]}}
@@ -67,13 +86,14 @@ Select Team
             </td>
             <td class="px-6 py-4">
               <label class="block mt-2">
-                <input type="checkbox" name="team" value="{{list[2]}}" class="accent-yellow-400">
+                <input type="checkbox" name="team" value="{{list[4]}}" class="accent-yellow-400">
               </label>
             </td>
           </tr>
-         </form>
+         
         {% endfor %}
         </tbody>
     </table>
 </div>
+</form>
 {% endblock %}
