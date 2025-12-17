@@ -230,7 +230,7 @@ def disp_showdownselect():
             return render_template("showdownselect.html", lists = lists)
     else:
         return redirect(url_for("auth.login_get"))
-    
+
 
 @app.route("/setup")
 def setup_teams():
@@ -249,7 +249,7 @@ def setup_teams():
             c2 = db.cursor()
             c2.execute("select * from chars where id = ?", (id,))
             char = c2.fetchone()
-            temp = showdowner(char[0], char[4], char[5])
+            temp = showdowner(char[0], char[1], char[4], char[5])
             team1.append(temp.to_dict())
 
         c.execute("select * from teams where teamid = ?", (team2_id,))
@@ -259,7 +259,7 @@ def setup_teams():
             c2 = db.cursor()
             c2.execute("select * from chars where id = ?", (id,))
             char = c2.fetchone()
-            temp = showdowner(char[0], char[4], char[5])
+            temp = showdowner(char[0], char[1], char[4], char[5])
             team2.append(temp.to_dict())
 
         session['team1'] = team1
@@ -273,10 +273,16 @@ def setup_teams():
 def disp_showdown():
     if session.get("username"):
         team1 = session.get('team1')
-        for member in team1:
-            member = showdowner.from_dict(member)
-            print(member)
-        return render_template("showdown.html")
+        team2 = session.get('team2')
+        for i in range(3):
+            member1 = showdowner.from_dict(team1[i])
+            member2 = showdowner.from_dict(team2[i])
+            team1[i] = member1
+            team2[i] = member2
+        print(team1[0])
+        team1[0].attack(team1[1])
+        print(team1[0])
+        return render_template("showdown.html", team1 = team1, team2 = team2)
     else:
         return redirect(url_for("auth.login_get"))
 

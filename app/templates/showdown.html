@@ -10,5 +10,30 @@ Showdown
 {% endblock %}
 
 {% block content %}
+<br> <br> <br> <br> <br>
+
+<div class="flex w-4/5 mx-auto flex-row items-center justify-center">
+  <div class="grid grid-cols-6">
+    {% for member in team1 %}
+    <div class="col-span-1">
+      <div class="rounded shadow-lg ms-2 items-center p-2 text-center">
+        <img class="w-24 h-32 object-cover mx-auto" src="{{member.img}}">
+        <p class="font-semibold">{{member.name}}</p>
+        <p><span class=" text-red-500 font-semibold">HP:</span> {{member.hp}}</p>
+      </div>
+    </div>
+    {% endfor %}
+
+    {% for member in team2 %}
+    <div class="col-span-1">
+      <div class="rounded shadow-lg ms-2 items-center p-2 text-center">
+        <img class="w-24 h-32 object-cover mx-auto" src="{{member.img}}">
+        <p class="font-semibold">{{member.name}}</p>
+        <p><span class=" text-yellow-400 font-semibold">HP:</span> {{member.hp}}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
 {% endblock %}

@@ -140,7 +140,7 @@ cursor.executescript(
     """
     DROP TABLE IF EXISTS profiles;
     CREATE TABLE profiles (
-    username TEXT PRIMARY KEY, 
+    username TEXT PRIMARY KEY,
     password TEXT
     );
     """
@@ -185,7 +185,7 @@ cursor.executescript(
     image_url TEXT,
     api_id INTEGER,
     hp INTEGER,
-    moves TEXT, 
+    moves TEXT,
     defense INTEGER,
     FOREIGN KEY (moves) REFERENCES moves(id)
     );
