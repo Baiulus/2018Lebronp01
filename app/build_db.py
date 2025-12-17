@@ -138,8 +138,8 @@ def get_dndcard(index: int):  # index should be within 0 and 333
 
 cursor.executescript(
     """
-    DROP TABLE IF EXISTS profiles;
-    CREATE TABLE profiles (
+    DROP TABLE IF EXISTS users;
+    CREATE TABLE users (
     username TEXT PRIMARY KEY,
     password TEXT
     );
@@ -150,14 +150,15 @@ cursor.executescript(
     """
     DROP TABLE IF EXISTS teams
     CREATE TABLE teams (
-    teamuser TEXT PRIMARY KEY,
+    teamuser TEXT,
     teamslot1 INTEGER,
     teamslot2 INTEGER,
     teamslot3 INTEGER,
-    FOREIGN KEY (teamuser) REFERENCES profiles(username),
-    FOREIGN KEY (teamslot1) REFERENCES characters(id)
-    FOREIGN KEY (teamslot2) REFERENCES characters(id)
-    FOREIGN KEY (teamslot3) REFERENCES characters(id)
+    teamid INTEGER PRIMARY KEY AUTOINCREMENT,
+    FOREIGN KEY (teamuser) REFERENCES users(username),
+    FOREIGN KEY (teamslot1) REFERENCES chars(id)
+    FOREIGN KEY (teamslot2) REFERENCES chars(id)
+    FOREIGN KEY (teamslot3) REFERENCES chars(id)
     );
     """
 )
@@ -176,8 +177,8 @@ cursor.executescript(
 
 cursor.executescript(
     """
-    DROP TABLE IF EXISTS characters;
-    CREATE TABLE characters (
+    DROP TABLE IF EXISTS chars;
+    CREATE TABLE chars (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     universe TEXT,
