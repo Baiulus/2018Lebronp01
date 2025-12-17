@@ -176,3 +176,7 @@ shafinK -- 2025-12-17 9:15
 - fixed issue with showdowner obj not properly turning into and not coming back from dictionary
 - added img variable to showdowner objs
 - showdown.html displays characters that will be showdowning
+
+lucasZ -- 2025-12-17 10:28
+- Cleaned up __init__.py
+- Fixed names with databases
