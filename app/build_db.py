@@ -90,7 +90,7 @@ def get_pokemon(pokeid: int):
 
 
 # returns list ([charname, imagelink, id, type, attack, hp, universe]) from a random Yu-Gi-Oh! card
-def get_yugiohcard(index int):
+def get_yugiohcard(index: int):
     url = "https://db.ygoprodeck.com/api/v7/cardinfo.php?type=Normal%20monster"  # all normal monster cards
     dataraw = requests.get(url)
     data = dataraw.json()
