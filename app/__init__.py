@@ -193,7 +193,7 @@ def disp_showdownselect():
             if (len(selected) != 1):
                 flash("Please select exactly 1 team")
                 return redirect(url_for('disp_showdownselect'))
-            
+
             if (type == 'user'):
                 session['team1'] = selected[0]
                 flash("Team selected. Please choose enemy team.", "success")
@@ -267,17 +267,19 @@ def setup_teams():
     else:
         return redirect(url_for("auth.login_get"))
 
-@app.route("/showdown")
+@app.route("/showdown", methods = ['GET', 'POST'])
 def disp_showdown():
     if session.get("username"):
+        target = request.args.get("target")
+        print(target)
         team1 = [showdowner.from_dict(member) for member in session.get('team1')]
         team2 = [showdowner.from_dict(member) for member in session.get('team2')]
         team1_messages = []
         team2_messages = []
 
-        t1m1_attack = random.randint(0, len(team2) - 1)
-        team1[0].attack(team2[t1m1_attack])
-        team1_messages.append(f"{team1[0].name} attacked {team2[t1m1_attack].name}!")
+        # t1m1_attack = random.randint(0, len(team2) - 1)
+        # team1[0].attack(team2[t1m1_attack])
+        # team1_messages.append(f"{team1[0].name} attacked {team2[t1m1_attack].name}!")
 
         team1 = [member for member in team1 if member.hp > 0]
         team2 = [member for member in team2 if member.hp > 0]

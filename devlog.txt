@@ -189,7 +189,7 @@ shafinK -- 2025-12-17 14:01
 - started on battle logic
 - refreshing showdown page causes brunson to randomly attack someone on the other team
 
-shafinK -- 2025-12-17 3:16 
+shafinK -- 2025-12-17 3:16
 - renamed all 'teamselct' to 'createteam' (fits better with its function)
 - reworked showdownselect
 - users chose their team and an enemy team
@@ -197,3 +197,8 @@ shafinK -- 2025-12-17 3:16
 lucasZ -- 2025-12-18 10:42
 - Cleaned up __init__.py
 - Added QOL functions to db.py
+
+shafinK -- 2025-12-18 14:45
+- changed selecting target to radio form instead of select form
+- trying to work on battle logic
+- build_db.py is broken (i didn't break it i promise)

@@ -15,8 +15,8 @@ Showdown
 <div class="flex w-4/5 mx-auto flex-row items-center justify-center">
   <div class="grid grid-cols-3">
     {% for member in team1 %}
-    <div class="col-span-1">
-      <div class="rounded shadow-lg ms-2 items-center p-2 text-center">
+    <div class="col-span-1 my-3">
+      <div class="rounded border-2 border- border-red-500 ms-2 items-center p-2 text-center">
         <img class="w-24 h-32 object-cover mx-auto" src="{{member.img}}">
         <p class="font-semibold">{{member.name}}</p>
         <p><span class=" text-red-500 font-semibold">HP:</span> {{member.hp}}</p>
@@ -26,13 +26,29 @@ Showdown
 
     {% for member in team2 %}
     <div class="col-span-1">
-      <div class="rounded shadow-lg ms-2 items-center p-2 text-center">
+      <div class="rounded border-2 border-yellow-400 ms-2 items-center p-2 text-center">
         <img class="w-24 h-32 object-cover mx-auto" src="{{member.img}}">
         <p class="font-semibold">{{member.name}}</p>
         <p><span class=" text-yellow-400 font-semibold">HP:</span> {{member.hp}}</p>
       </div>
     </div>
     {% endfor %}
+
+    {% for member1 in team1 %}
+    <form method="POST" action="/showdown" class="grid grid-cols-1 mt-6">
+      <label class="mx-4">Who should {{member1.name}} attack?</label>
+      {% for i in range(team2|length) %}
+      <label class="flex items-center">
+          <input type="radio" name="target" value={{i}} checked class="accent-yellow-400">
+          <p class="ms-2">{{team2[i].name}}</p>
+      </label>
+      {% endfor %}
+      <div class="flex justify-center mt-4 mb-4">
+        <button type="submit", class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-200 hover:scale-105">Showdown!</button>
+      </div>
+    </form>
+    {% endfor %}
+
   </div>
 </div>
 
