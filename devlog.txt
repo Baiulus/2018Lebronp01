@@ -193,3 +193,7 @@ shafinK -- 2025-12-17 3:16
 - renamed all 'teamselct' to 'createteam' (fits better with its function)
 - reworked showdownselect
 - users chose their team and an enemy team
+
+lucasZ -- 2025-12-18 10:42
+- Cleaned up __init__.py
+- Added QOL functions to db.py
