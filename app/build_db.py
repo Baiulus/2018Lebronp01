@@ -8,12 +8,28 @@ DB_FILE = "Lebron.db"
 db = sqlite3.connect(DB_FILE)
 cursor = db.cursor()
 
+num_pokemon = 151
+num_dnd = 334
+
+
+def poke_moves(pokedata: Dict, moveindex: int): #returns move type, power, and accuracy
+    moveurl = pokedata["moves"][moveindex]["move"]["url"]
+    
+    movedataraw = requests.get(moveurl) #creates a request, USE SPARINGLY
+    movedata = movedataraw.json()
+    
+    move_type = movedata["type"]["name"]
+    move_power = movedata["power"]
+    move_accuracy = movedata["accuracy"]
+    
+    return [move_type, move_power, move_accuracy]
+
+def dnd_moves(dnddata: Dict, moveindex: int):
+    move_power_str = dnddata["actions"][moveindex]["damage"][0]["damage_dice"] #work on this later ngl 
 
 # formats api data into a dictionary
-def poke_api_format(
-    pokeid: int,
-) -> Optional[Dict]:  # example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
-    pokeurl = "https://pokeapi.co/api/v2/pokemon/" + str(pokeid)
+def poke_api_format(pokeid: int) -> Optional[Dict]:  # example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
+    pokeurl = "https://pokeapi.co/api/v2/pokemon/" + str(pokeid + 1)
 
     dataraw = requests.get(pokeurl)
     data = dataraw.json()
@@ -48,7 +64,8 @@ def get_type(pokedata: Dict):
 
     for i in pokedata["types"]:
         poketypes.append(i["type"]["name"])
-        poketypes = ", ".join(poketypes)
+    
+    poketypes = ", ".join(poketypes)
 
     return poketypes
 
@@ -73,33 +90,36 @@ def get_pokemon(pokeid: int):
 
 
 # returns list ([charname, imagelink, id, type, attack, hp, universe]) from a random Yu-Gi-Oh! card
-def get_yugiohcard():
-    url = "https://db.ygoprodeck.com/api/v7/randomcard.php"  # url holds a random card, but we want monster cards specifically with all required values
-    while True:
-        try:
-            with urllib.request.urlopen(url) as page:
-                data = json.load(page)  # data is a dictionary
-                card = data["data"][0]
-                if (
-                    "name" not in card
-                    or "id" not in card
-                    or "type" not in card
-                    or "atk" not in card
-                    or "def" not in card
-                ):  # keeps getting a new url card until all values are present
-                    continue
-                charname = card["name"]
-                imagelink = card["card_images"][0]["image_url"]
-                id = card["id"]
-                type = card["type"]
-                attack = card["atk"]
-                hp = card["def"]  # use def as hp for now
-                universe = "Yu-Gi-Oh!"
-                list = [charname, imagelink, id, type, attack, hp, universe]
-                # print(list)
-                return list
-        except:
-            continue
+def get_yugiohcard(index int):
+    url = "https://db.ygoprodeck.com/api/v7/cardinfo.php?type=Normal%20monster"  # all normal monster cards
+    dataraw = requests.get(url)
+    data = dataraw.json()
+    monster = data["data"][index]
+#     while True: commented out due to being unneeded with new search peramaters
+#         try:
+#             with urllib.request.urlopen(url) as page:
+#                 data = json.load(page)  # data is a dictionary
+#                 card = data["data"][0]
+#                 if (
+#                     "name" not in card
+#                     or "id" not in card
+#                     or "type" not in card
+#                     or "atk" not in card
+#                     or "def" not in card
+#                 ):  # keeps getting a new url card until all values are present
+#                     continue
+    charname = card["name"]
+    imagelink = card["card_images"][0]["image_url"]
+    id = index + num_pokemon + num_dnd
+    type = card["type"]
+    attack = card["atk"]
+    hp = card["def"]  # use def as hp for now
+    universe = "Yu-Gi-Oh!"
+    list = [charname, imagelink, id, type, attack, hp, universe]
+    # print(list)
+    return list
+#         except:
+#             continue
 
 
 # returns list ([charname, imagelink, id, type, attack, hp, universe]) from a random D&D card
@@ -113,7 +133,7 @@ def get_dndcard(index: int):  # index should be within 0 and 333
         data = json.load(pagetwo)
         charname = data["name"]
         imagelink = "https://www.dnd5eapi.co" + data["image"]
-        id = index
+        id = index + num_pokemon
         type = data["type"]
         dice = data["hit_dice"]
         dicearray = dice.split("d")
