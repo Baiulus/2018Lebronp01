@@ -111,14 +111,14 @@ def disp_roster():
         return redirect(url_for("auth.login_get"))
 
 
-@app.route("/teamselect", methods = ['GET', 'POST'])
-def disp_teamselect():
+@app.route("/createteam", methods = ['GET', 'POST'])
+def disp_createteam():
     if session.get("username"):
         if (request.method == 'POST'):
             selected = request.form.getlist("team")
             if (len(selected) != 3):
                 flash("Please select exactly 3 team members.")
-                return(redirect(url_for('disp_teamselect')))
+                return(redirect(url_for('disp_createteam')))
             db = sqlite3.connect(DB_FILE)
             c = db.cursor()
             c.execute("insert into teams (teamuser, teamslot1, teamslot2, teamslot3) values(?, ?, ?, ?)", (session.get('username'), selected[0], selected[1], selected[2]))
@@ -138,7 +138,7 @@ def disp_teamselect():
                 temp = [char[0], char[1], char[2]]
                 lists.append(temp)
             db.close()
-            return render_template("teamselect.html", lists = lists)
+            return render_template("createteam.html", lists = lists)
     else:
         return redirect(url_for("auth.login_get"))
 
@@ -189,12 +189,21 @@ def disp_showdownselect():
     if session.get("username"):
         if (request.method == 'POST'):
             selected = request.form.getlist("team")
-            if (len(selected) != 2):
-                flash("Please select exactly 2 teams")
+            type = request.form.get("type")
+            if (len(selected) != 1):
+                flash("Please select exactly 1 team")
                 return redirect(url_for('disp_showdownselect'))
-            team1 = selected[0]
-            team2 = selected[1]
-            return redirect(url_for('setup_teams', team1 = team1, team2 = team2))
+            
+            if (type == 'user'):
+                session['team1'] = selected[0]
+                flash("Team selected. Please choose enemy team.", "success")
+                return redirect(url_for("disp_showdownselect"))
+            elif (type == 'enemy'):
+                if not (session.get('team1')):
+                    flash("Select your team first.", 'error')
+                    return redirect(url_for("disp_showdownselect"))
+                session['team2'] = selected[0]
+                return redirect(url_for('setup_teams'))
         else:
             filter = request.args.get("filter", "all")
             lists = []
@@ -226,14 +235,12 @@ def disp_showdownselect():
 @app.route("/setup")
 def setup_teams():
     if session.get("username"):
-        team1_id = request.args.get("team1")
-        team2_id = request.args.get("team2")
         team1 = []
         team2 = []
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
 
-        c.execute("select * from teams where teamid = ?", (team1_id,))
+        c.execute("select * from teams where teamid = ?", (session.get('team1'),))
         temp1 = c.fetchone()
         team1_ids = [temp1[1], temp1[2], temp1[3]]
         for id in team1_ids:
@@ -243,7 +250,7 @@ def setup_teams():
             temp = showdowner(char[0], char[1], char[4], char[5])
             team1.append(temp.to_dict())
 
-        c.execute("select * from teams where teamid = ?", (team2_id,))
+        c.execute("select * from teams where teamid = ?", (session.get('team2'),))
         temp2 = c.fetchone()
         team2_ids = [temp2[1], temp2[2], temp2[3]]
         for id in team2_ids:
@@ -263,31 +270,20 @@ def setup_teams():
 @app.route("/showdown")
 def disp_showdown():
     if session.get("username"):
-        team1 = session.get('team1')
-        team2 = session.get('team2')
+        team1 = [showdowner.from_dict(member) for member in session.get('team1')]
+        team2 = [showdowner.from_dict(member) for member in session.get('team2')]
         team1_messages = []
         team2_messages = []
-        
-        for i in range(len(team1)):
-            member = showdowner.from_dict(team1[i])
-            if (member.hp > 0):
-                team1[i] = member
-            else:
-                team1.pop(i)
-
-        for i in range(len(team2)):
-            member = showdowner.from_dict(team2[i])
-            if (member.hp > 0):
-                team1[i] = member
-            else:
-                team1.pop(i)
 
         t1m1_attack = random.randint(0, len(team2) - 1)
-        print(t1m1_attack)
         team1[0].attack(team2[t1m1_attack])
         team1_messages.append(f"{team1[0].name} attacked {team2[t1m1_attack].name}!")
+
+        team1 = [member for member in team1 if member.hp > 0]
+        team2 = [member for member in team2 if member.hp > 0]
         session['team1'] = [member.to_dict() for member in team1]
         session['team2'] = [member.to_dict() for member in team2]
+
         return render_template("showdown.html", team1 = team1, team2 = team2, team1_messages = team1_messages, team2_messages = team2_messages)
     else:
         return redirect(url_for("auth.login_get"))
