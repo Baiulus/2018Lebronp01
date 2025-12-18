@@ -291,58 +291,6 @@ def disp_showdown():
 db.commit()
 db.close()
 
-# QoL db commands
-def accessitem(
-    tablename, columnname
-):  # accesses "columnname" from a chosen "tablename" in db
-    cursor.execute(
-        f"Select" + columnname + "from" + tablename
-    )  # input: select [__COLUMNNAME__] from [__TABLENAME__]
-
-
-def accessitem_s(
-    tablename, columnname, itemname
-):  # accesses a single item from a given column
-    cursor.execute(
-        f"Select * from" + tablename + "where" + columnname + "= '" + itemname + "'"
-    )  # input: select * from [__TABLENAME__] where [__COLUMNNAME__] = '[__ITEMNAME__]'
-
-
-def accessitem_s_m(
-    tablename, columnname1, itemname1, columnname2, itemname2
-):  # accesses a single item from a given column
-    cursor.execute(
-        f"Select * from"
-        + tablename
-        + "where"
-        + columnname
-        + "= '"
-        + itemname
-        + "' and "
-        + columnname2
-        + "= '"
-        + itemname2
-        + "')"
-    )  # input: select * from [__TABLENAME__] where [__COLUMNNAME__] = '[__ITEMNAME__]'
-
-
-def accessitem_m(
-    tablename, columnname, itemarray
-):  # accesses any item from the itemarray in a given column
-
-    for (
-        item
-    ) in itemarray:  # adds [']s to each item in itemarray to make it readable by sqlite
-        item = "'" + item + "'"
-
-    items = ", ".join(
-        map(str, itemarray)
-    )  # removes the brackets from itemarray to make items readable by sqlite
-
-    cursor.execute(
-        f"Select * from" + tablename + "where" + columnname + "in (" + items + ")"
-    )  # input: select * from [__TABLENAME__] where [__COLUMNNAME__] in [__ITEMS__]
-
 
 # --------------------------------------------------------------------------
 # TESTS
