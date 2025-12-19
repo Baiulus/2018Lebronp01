@@ -25,15 +25,35 @@ def poke_moves(pokedata: Dict, moveindex: int): #returns move type, power, name,
 
     return [move_name, move_type, move_power, move_accuracy]
 
-# def dnd_moves(dnddata: Dict, moveindex: int):
-#     movedata = dnddata["actions"][moveindex]
-# 
-#     if movedata["name"] == "Multiattack": #if the attack is a multi-attack (because that has no damage dice) picks the first attack in the multiattack with damage dice and makes that the chosen move
-#         for actind in movedata[actions]:
-#             for actind2 in range(len(dnddata["actions"])):
-#                 if actind["name"]
-# 
-# 
+def dnd_moves(dnddata: Dict, moveindex: int):
+    movedata = dnddata["actions"][moveindex]
+
+    if movedata["damage"] == []:
+        if movedata["name"] == "Multiattack": #if the attack is a multi-attack (because that has no damage dice) picks the first attack in the multiattack with damage dice and makes that the chosen move
+            for actind in movedata["actions"]:
+                for actind2 in dnddata["actions"]:
+                    if actind["action_name"] == actind2["name"]:
+                        if actind2["damage"] != []:
+                            move_power_str = actind2["damage"][0]["damage_dice"]
+                            
+                            dicearray_str = move_power_str.split("+")
+                            print(dicearray_str)
+                            dicearray = move_power_str[0].split("d")
+                            print(dicearray)
+                            dicearray = [int(x) for x in dicearray] #turns attack into an integer
+                            movepower = int(dicearray[0] * dicearray[1] / 2 * 3) #multiplies attack amount by 3 to account for multiattack's extra attacks
+                            
+                            return movepower
+    
+    move_power_str = dnddata["damage"]["damage"][0]["damage_dice"]
+
+    dicearray = move_power_str.split("d")
+    dicearray = [int(x) for x in dicearray] #turns attack into an integer
+    movepower = int(dicearray[0] * dicearray[1] / 2 * 3) #multiplies attack amount by 3 to account for multiattack's extra attacks
+    
+    return movepower
+
+
 #         for actionindex in range(len(dnddata["actions"])):
 #             movename = movedata["actions"][actionindex]["action_name"]
 #             print(dnddata["actions"][moveindex]["actions"][actionindex]["action_name"])
@@ -95,7 +115,8 @@ def get_type(pokedata: Dict):
         poketypes.append(i["type"]["name"])
 
     poketypes = ", ".join(poketypes)
-
+#         for q in range(5):
+#             build_db.db_insert(build_db.get_yugiohcard(q))
     return poketypes
 
 

@@ -78,11 +78,15 @@ cursor.execute("""insert or ignore into chars
 # Flask commands
 @app.route("/")
 def disp_homepage():
-    for p in range(5):
-        build_db.db_insert(build_db.get_pokemon(p))
     if session.get("username"):
         return render_template("homepage.html")
     else:
+        for p in range(10):
+            build_db.db_insert(build_db.get_dndcard(p))
+        for l in range(30):
+            build_db.db_insert(build_db.get_pokemon(l))
+#         for q in range(5):
+#             build_db.db_insert(build_db.get_yugiohcard(q))
         session['username'] = 'a'
         return redirect(url_for("auth.login_get"))
     
