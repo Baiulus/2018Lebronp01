@@ -12,18 +12,22 @@ Showdown
 {% block content %}
 <br> <br> <br> <br> <br>
 
-<div class="flex w-4/5 mx-auto flex-row items-center justify-center">
-  <div class="grid grid-cols-3">
+<div class="flex w-2/5 mx-auto grid grid-cols-1">
+  <div class="grid grid-cols-{{team1|length}}">
+
     {% for member in team1 %}
     <div class="col-span-1 my-3">
-      <div class="rounded border-2 border- border-red-500 ms-2 items-center p-2 text-center">
+      <div class="max-w-sm rounded border-2 border- border-red-500 ms-2 items-center p-2 text-center">
         <img class="w-24 h-32 object-cover mx-auto" src="{{member.img}}">
         <p class="font-semibold">{{member.name}}</p>
         <p><span class=" text-red-500 font-semibold">HP:</span> {{member.hp}}</p>
       </div>
     </div>
     {% endfor %}
+  </div>
 
+
+  <div class="grid grid-cols-{{team2|length}}">
     {% for member in team2 %}
     <div class="col-span-1">
       <div class="rounded border-2 border-yellow-400 ms-2 items-center p-2 text-center">

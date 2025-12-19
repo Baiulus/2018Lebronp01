@@ -212,4 +212,8 @@ shafinK -- 2025-12-19 9:07
 - renamed teamselect to createteam (idk why it reverted)
 - added enemy bot attacking random user team member
 - fixed small issue with universe not diplaying on roster
-- accidentally pushed old (working) version of build_db last commit so i reverted it 
+- accidentally pushed old (working) version of build_db last commit so i reverted it
+
+shafinK -- 2025-12-19 12:17
+- fixed formatting issue on showdown where team2 members would be on the same row as team1
+- fixed error with trying to submit enemy team before user team
