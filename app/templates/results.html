@@ -1,0 +1,31 @@
+<!--
+    Lucas Zheng, Emily Mai, Mycroft Lee, Shafin Kazi
+    SoftDev 2025
+    P01
+  -->
+{% extends "base.html" %}
+
+{% block title %}
+{% if result == 'win'%}
+Victory!
+{% elif result == 'lose' %}
+Deafeat
+{% elif result == 'draw' %}
+Draw 
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<br> <br> <br> <br> <br>
+<div class="flex flex-col items-center justify-center space-y-4">
+    {% if result == 'win'%}
+        <h1 class="text-5xl font-bold">You win!</h1>
+    {% elif result == 'lose' %}
+        <h1 class="text-5xl font-bold">You lose!</h1>
+    {% elif result == 'draw' %}
+        <h1 class="text-5xl font-bold">You tie!</h1>
+    {% endif %}
+    <a href="/showdownselect" class="text-3xl text-red-500 hover:text-red-700 transition duration-200 hover:scale-105 px-8 font-bold">Play again?</a>
+</div>
+
+{% endblock %}

@@ -270,23 +270,40 @@ def setup_teams():
 @app.route("/showdown", methods = ['GET', 'POST'])
 def disp_showdown():
     if session.get("username"):
-        target = request.args.get("target")
-        print(target)
         team1 = [showdowner.from_dict(member) for member in session.get('team1')]
         team2 = [showdowner.from_dict(member) for member in session.get('team2')]
-        team1_messages = []
-        team2_messages = []
 
-        # t1m1_attack = random.randint(0, len(team2) - 1)
-        # team1[0].attack(team2[t1m1_attack])
-        # team1_messages.append(f"{team1[0].name} attacked {team2[t1m1_attack].name}!")
+        messages = []
+
+        for i in range(len(team1)):
+            target = request.form.get(f"target_{i}")
+            if not target is None:
+                target = int(target)
+                team1[i].attack(team2[target])
+                messages.append(f"{team1[i].name} attacked {team2[target].name}")
 
         team1 = [member for member in team1 if member.hp > 0]
         team2 = [member for member in team2 if member.hp > 0]
+
+        if (len(team1) == 0 and len(team2) != 0):
+            return redirect(url_for("disp_results", result = "lose"))
+        if (len(team2) == 0 and len(team1) != 0):
+            return redirect(url_for("disp_results", result = "win"))
+        if (len(team2) == 0 and len(team1) == 0):
+            return redirect(url_for("disp_results", result = "draw"))
+
         session['team1'] = [member.to_dict() for member in team1]
         session['team2'] = [member.to_dict() for member in team2]
 
-        return render_template("showdown.html", team1 = team1, team2 = team2, team1_messages = team1_messages, team2_messages = team2_messages)
+        return render_template("showdown.html", team1 = team1, team2 = team2, messages = messages)
+    else:
+        return redirect(url_for("auth.login_get"))
+    
+@app.route("/results", methods = ['GET'])
+def disp_results():
+    if session.get("username"):
+        result = request.args.get("result")
+        return render_template("results.html", result = result)
     else:
         return redirect(url_for("auth.login_get"))
 

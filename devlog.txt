@@ -202,3 +202,8 @@ shafinK -- 2025-12-18 14:45
 - changed selecting target to radio form instead of select form
 - trying to work on battle logic
 - build_db.py is broken (i didn't break it i promise)
+
+shafinK -- 2025-12-19 00:19
+- fixed form logic on showdown --> one form instead of 3
+- barebones basic user battle logic done 
+- results screen made 
