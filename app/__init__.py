@@ -78,11 +78,14 @@ cursor.execute("""insert or ignore into chars
 # Flask commands
 @app.route("/")
 def disp_homepage():
+    for p in range(5):
+        build_db.db_insert(build_db.get_pokemon(p))
     if session.get("username"):
         return render_template("homepage.html")
     else:
         session['username'] = 'a'
         return redirect(url_for("auth.login_get"))
+    
 
 @app.route("/roster")
 def disp_roster():
@@ -90,14 +93,6 @@ def disp_roster():
         filter = request.args.get("filter", "all")
         db = sqlite3.connect(DB_FILE)
         c = db.cursor()
-        #Yu-Gi-Oh! API
-        # for i in range(5): #adds 5 random Yu-Gi-Oh! cards to the table
-        #     data = build_db.get_yugiohcard()
-        #     c.execute(
-        #         "insert into chars (charname, imagelink, id, type, atk, hp, universe) values (?, ?, ?, ?, ?, ?, ?)",
-        #         (data[0], data[1], data[2], data[3], data[4], data[5], data[6])
-        #     )
-        # db.commit()
         lists = []
         if (filter == 'all'):
             chars = c.execute("select * from chars")
@@ -217,7 +212,27 @@ def disp_showdownselect():
                 temp = [team[0]]
                 chars = [team[1], team[2], team[3]]
                 db2 = sqlite3.connect(DB_FILE)
-                c2 = db.cursor()
+                c2 = db.cursor()# def dnd_moves(dnddata: Dict, moveindex: int):
+#     movedata = dnddata["actions"][moveindex]
+# 
+#     if movedata["name"] == "Multiattack": #if the attack is a multi-attack (because that has no damage dice) picks the first attack in the multiattack with damage dice and makes that the chosen move
+#         for actind in movedata[actions]:
+#             for actind2 in range(len(dnddata["actions"])):
+#                 if actind["name"]
+# 
+# 
+#         for actionindex in range(len(dnddata["actions"])):
+#             movename = movedata["actions"][actionindex]["action_name"]
+#             print(dnddata["actions"][moveindex]["actions"][actionindex]["action_name"])
+#             print(movename)
+#             if dnddata["actions"][actionindex]["damage"]["name"] == movename and dnddata["actions"][actionindex]["damage"] != []: #iterates through every attack in the multiattack until one that actually does damage is found
+#                 move_power_str = dnddata["actions"][actionindex]["damage"]["damage"][0]["damage_dice"]
+# 
+#                 dicearray = move_power_str.split("d")
+#                 dicearray = [int(x) for x in dicearray] #turns attack into an integer
+#                 movepower = int(dicearray[0] * dicearray[1] / 2 * 3) #multiplies attack amount by 3 to account for multiattack's extra attacks
+# 
+#                 return(movepower)
                 for char in chars:
                     c2.execute("select charname from chars where id = ?", (char,))
                     name = c2.fetchone()[0]

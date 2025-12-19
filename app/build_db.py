@@ -25,27 +25,27 @@ def poke_moves(pokedata: Dict, moveindex: int): #returns move type, power, name,
 
     return [move_name, move_type, move_power, move_accuracy]
 
-def dnd_moves(dnddata: Dict, moveindex: int):
-    movedata = dnddata["actions"][moveindex]
-
-    if movedata["name"] == "Multiattack": #if the attack is a multi-attack (because that has no damage dice) picks the first attack in the multiattack with damage dice and makes that the chosen move
-        for actind in range(len(movedata[actions])):
-            for actind2 in range(len(dnddata["actions"])):
-                if
-
-
-        for actionindex in range(len(dnddata["actions"])):
-            movename = movedata["actions"][actionindex]["action_name"]
-            print(dnddata["actions"][moveindex]["actions"][actionindex]["action_name"])
-            print(movename)
-            if dnddata["actions"][actionindex]["damage"]["name"] == movename and dnddata["actions"][actionindex]["damage"] != []: #iterates through every attack in the multiattack until one that actually does damage is found
-                move_power_str = dnddata["actions"][actionindex]["damage"]["damage"][0]["damage_dice"]
-
-                dicearray = move_power_str.split("d")
-                dicearray = [int(x) for x in dicearray] #turns attack into an integer
-                movepower = int(dicearray[0] * dicearray[1] / 2 * 3) #multiplies attack amount by 3 to account for multiattack's extra attacks
-
-                return(movepower)
+# def dnd_moves(dnddata: Dict, moveindex: int):
+#     movedata = dnddata["actions"][moveindex]
+# 
+#     if movedata["name"] == "Multiattack": #if the attack is a multi-attack (because that has no damage dice) picks the first attack in the multiattack with damage dice and makes that the chosen move
+#         for actind in movedata[actions]:
+#             for actind2 in range(len(dnddata["actions"])):
+#                 if actind["name"]
+# 
+# 
+#         for actionindex in range(len(dnddata["actions"])):
+#             movename = movedata["actions"][actionindex]["action_name"]
+#             print(dnddata["actions"][moveindex]["actions"][actionindex]["action_name"])
+#             print(movename)
+#             if dnddata["actions"][actionindex]["damage"]["name"] == movename and dnddata["actions"][actionindex]["damage"] != []: #iterates through every attack in the multiattack until one that actually does damage is found
+#                 move_power_str = dnddata["actions"][actionindex]["damage"]["damage"][0]["damage_dice"]
+# 
+#                 dicearray = move_power_str.split("d")
+#                 dicearray = [int(x) for x in dicearray] #turns attack into an integer
+#                 movepower = int(dicearray[0] * dicearray[1] / 2 * 3) #multiplies attack amount by 3 to account for multiattack's extra attacks
+# 
+#                 return(movepower)
 
 
 #     move_power_str = movedata["damage"][0]["damage_dice"] #work on this later ngl
@@ -161,7 +161,7 @@ def get_dndcard(index: int):  # index should be within 0 and 333
     with urllib.request.urlopen(urltwo) as pagetwo:
         data = json.load(pagetwo)
 
-        print(dnd_moves(data, 0))
+        #print(dnd_moves(data, 0))
         charname = data["name"]
         imagelink = "https://www.dnd5eapi.co" + data["image"]
         id = index + num_pokemon
@@ -177,13 +177,16 @@ def get_dndcard(index: int):  # index should be within 0 and 333
         return list
 
 
-# def db_insert(data: list):
-#     dataformat = str(data).replace('[', ']', '')
-#     datastring = ', '.join(dataformat)
-#     print(f"insert into chars (" + datastring + ")")
-#     cursor.execute(f"insert into chars (" + datastring + ")")
-#
-# db_insert(get_pokemon(151))
+def db_insert(data: list):
+    db = sqlite3.connect(DB_FILE)
+    cursor = db.cursor()
+
+    cursor.execute(
+        "insert or ignore into chars (charname, imagelink, id, type, atk, hp, universe) values (?, ?, ?, ?, ?, ?, ?)",
+        (data[0], data[1], data[2], data[3], data[4], data[5], data[6])
+    )
+    db.commit()
+    db.close()
 
 # Build Databse
 
@@ -243,6 +246,6 @@ cursor.executescript(
     """
 )
 
-print(get_dndcard(3))
+#print(get_dndcard(3))
 db.commit()
 db.close()
