@@ -12,20 +12,49 @@ num_pokemon = 151
 num_dnd = 334
 
 
-def poke_moves(pokedata: Dict, moveindex: int): #returns move type, power, and accuracy
+def poke_moves(pokedata: Dict, moveindex: int): #returns move type, power, name, and accuracy
     moveurl = pokedata["moves"][moveindex]["move"]["url"]
-    
+
     movedataraw = requests.get(moveurl) #creates a request, USE SPARINGLY
     movedata = movedataraw.json()
-    
+
     move_type = movedata["type"]["name"]
     move_power = movedata["power"]
     move_accuracy = movedata["accuracy"]
-    
-    return [move_type, move_power, move_accuracy]
+    move_name = movedata["name"]
+
+    return [move_name, move_type, move_power, move_accuracy]
 
 def dnd_moves(dnddata: Dict, moveindex: int):
-    move_power_str = dnddata["actions"][moveindex]["damage"][0]["damage_dice"] #work on this later ngl 
+    movedata = dnddata["actions"][moveindex]
+
+    if movedata["name"] == "Multiattack": #if the attack is a multi-attack (because that has no damage dice) picks the first attack in the multiattack with damage dice and makes that the chosen move
+        for actind in range(len(movedata[actions])):
+            for actind2 in range(len(dnddata["actions"])):
+                if
+
+
+        for actionindex in range(len(dnddata["actions"])):
+            movename = movedata["actions"][actionindex]["action_name"]
+            print(dnddata["actions"][moveindex]["actions"][actionindex]["action_name"])
+            print(movename)
+            if dnddata["actions"][actionindex]["damage"]["name"] == movename and dnddata["actions"][actionindex]["damage"] != []: #iterates through every attack in the multiattack until one that actually does damage is found
+                move_power_str = dnddata["actions"][actionindex]["damage"]["damage"][0]["damage_dice"]
+
+                dicearray = move_power_str.split("d")
+                dicearray = [int(x) for x in dicearray] #turns attack into an integer
+                movepower = int(dicearray[0] * dicearray[1] / 2 * 3) #multiplies attack amount by 3 to account for multiattack's extra attacks
+
+                return(movepower)
+
+
+#     move_power_str = movedata["damage"][0]["damage_dice"] #work on this later ngl
+#
+#     dicearray = move_power_str.split("d")
+#     dicearray = [int(x) for x in dicearray]
+#     movepower = int(dicearray[0] * dicearray[1] / 2)
+#
+#     print(movepower)
 
 # formats api data into a dictionary
 def poke_api_format(pokeid: int) -> Optional[Dict]:  # example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
@@ -64,7 +93,7 @@ def get_type(pokedata: Dict):
 
     for i in pokedata["types"]:
         poketypes.append(i["type"]["name"])
-    
+
     poketypes = ", ".join(poketypes)
 
     return poketypes
@@ -90,7 +119,7 @@ def get_pokemon(pokeid: int):
 
 
 # returns list ([charname, imagelink, id, type, attack, hp, universe]) from a random Yu-Gi-Oh! card
-def get_yugiohcard(index int):
+def get_yugiohcard(index: int):
     url = "https://db.ygoprodeck.com/api/v7/cardinfo.php?type=Normal%20monster"  # all normal monster cards
     dataraw = requests.get(url)
     data = dataraw.json()
@@ -131,6 +160,8 @@ def get_dndcard(index: int):  # index should be within 0 and 333
     urltwo = "https://www.dnd5eapi.co" + urlpart
     with urllib.request.urlopen(urltwo) as pagetwo:
         data = json.load(pagetwo)
+
+        print(dnd_moves(data, 0))
         charname = data["name"]
         imagelink = "https://www.dnd5eapi.co" + data["image"]
         id = index + num_pokemon
@@ -212,5 +243,6 @@ cursor.executescript(
     """
 )
 
+print(get_dndcard(3))
 db.commit()
 db.close()

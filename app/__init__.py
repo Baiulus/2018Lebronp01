@@ -31,7 +31,7 @@ cursor.execute("""insert or ignore into chars
     'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F12%2FLebron-James-Basketball-Player-PNG-Free-Image.png&f=1&nofb=1&ipt=023cda4e59b314393a042362367eff50c06dbad8dd6b2240e63ec9a92ea454aa',
     23,
     'Cavs',
-    500,
+    100,
     1000,
     'NBA')""")
 
@@ -48,7 +48,7 @@ cursor.execute("""insert or ignore into chars
     'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fathlonsports.com%2F.image%2Far_8%3A10%252Cc_fill%252Ccs_srgb%252Cfl_progressive%252Cg_faces%3Acenter%252Cq_auto%3Agood%252Cw_620%2FMjE0NDY3ODg1NDUwNDA0ODg3%2Fluka-doncic.jpg&f=1&nofb=1&ipt=fd1f2789c9a64264dbda4d835fafd7fefe4c5b12fe01dcd9d6ed2044484cf8d5',
     77,
     'Lakers',
-    500,
+    100,
     1000,
     'NBA')""")
 
@@ -65,7 +65,7 @@ cursor.execute("""insert or ignore into chars
     'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flivesport-ott-images.ssl.cdn.cra.cz%2Fr900xfq60%2F29d1f8e5-186f-4e21-a601-b4341a35f804.jpeg&f=1&nofb=1&ipt=0f88ae2fddf4ca6929075c5deb8447cc6a60e9fde1fdac35ca5eed1a2f089fec',
     11,
     'Knicks',
-    500,
+    100,
     1000,
     'NBA')""")
 
@@ -104,7 +104,7 @@ def disp_roster():
         else:
             chars = c.execute("select * from chars where universe = ?", (filter, ))
         for char in chars:
-            temp = [char[0], char[1], char[2], char[3], char[4], char[5], char[6]]
+            temp = [char[0], char[1], char[2], char[3], char[4], char[5], char[7]]
             lists.append(temp)
         return render_template("roster.html", lists = lists)
     else:
@@ -273,14 +273,24 @@ def disp_showdown():
         team1 = [showdowner.from_dict(member) for member in session.get('team1')]
         team2 = [showdowner.from_dict(member) for member in session.get('team2')]
 
-        messages = []
+        team1_messages = []
+        team2_messages = []
+
+        user_attacked = False
 
         for i in range(len(team1)):
             target = request.form.get(f"target_{i}")
             if not target is None:
                 target = int(target)
                 team1[i].attack(team2[target])
-                messages.append(f"{team1[i].name} attacked {team2[target].name}")
+                team1_messages.append(f"{team1[i].name} attacked {team2[target].name} for {team1[i].atk} damage!")
+                user_attacked = True
+
+        if (user_attacked):
+            for member in team2:
+                target = random.randint(0, len(team1) - 1)
+                member.attack(team1[target])
+                team2_messages.append(f"{member.name} attacked {team1[target].name} for {member.atk} damage!")
 
         team1 = [member for member in team1 if member.hp > 0]
         team2 = [member for member in team2 if member.hp > 0]
@@ -295,10 +305,10 @@ def disp_showdown():
         session['team1'] = [member.to_dict() for member in team1]
         session['team2'] = [member.to_dict() for member in team2]
 
-        return render_template("showdown.html", team1 = team1, team2 = team2, messages = messages)
+        return render_template("showdown.html", team1 = team1, team2 = team2, team1_messages = team1_messages, team2_messages = team2_messages)
     else:
         return redirect(url_for("auth.login_get"))
-    
+
 @app.route("/results", methods = ['GET'])
 def disp_results():
     if session.get("username"):
