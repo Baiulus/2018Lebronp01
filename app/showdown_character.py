@@ -1,29 +1,34 @@
 class showdowner:
 
-    def __init__(self, name, img, atk, hp):
+    def __init__(self, name, img, type, hp, moves):
         self.name = name
         self.img = img
-        self.atk = atk
+        self.type = type
         self.hp = hp
+        self.moves = moves
 
     def __str__(self):
         str = ""
-        str += f"name: {self.name}\n"
-        str += f"atk: {self.atk}\n"
-        str += f"hp: {self.hp}\n"
+        str += f"Name: {self.name}\n"
+        str += f"Type: {self.type}\n"
+        str += f"HP: {self.hp}\n"
+        for move in self.moves:
+            str += f"{move}\n"
+
         return str
 
     def to_dict(self):
-        d = {"name": self.name,
-             "img" : self.img,
-             "atk": self.atk,
-             "hp": self.hp}
+        d = {"Name": self.name,
+             "Img" : self.img,
+             "Type": self.type,
+             "HP": self.hp,
+             "Moves": self.moves}
         return d
 
     @staticmethod
     def from_dict(d):
-        old_self = showdowner(d['name'], d['img'], d['atk'], d['hp'])
+        old_self = showdowner(d['Name'], d['Img'], d['Type'], d['HP'], d['Moves'])
         return old_self
 
-    def attack(self, other):
-        other.hp -= self.atk
+    def attack(self, move, other):
+        other.hp -= move.damage

@@ -296,7 +296,7 @@ def disp_showdown():
         team2 = [member for member in team2 if member.hp > 0]
 
         if (len(team1) == 0 and len(team2) != 0):
-            return redirect(url_for("disp_results", result = "lose"))
+            return redirect(url_for("disp_results", result = "loss"))
         if (len(team2) == 0 and len(team1) != 0):
             return redirect(url_for("disp_results", result = "win"))
         if (len(team2) == 0 and len(team1) == 0):

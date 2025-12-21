@@ -5,18 +5,16 @@ import sqlite3, os
 from typing import List, Dict, Optional
 
 DB_FILE = "Lebron.db"
-db = sqlite3.connect(DB_FILE)
-cursor = db.cursor()
 
-num_pokemon = 151
-num_dnd = 334
+num_pokemon = 2
+num_yugioh = 2
 
 
 # Pokemon API
 def poke_api_format(
     pokeid: int,
 ) -> Optional[Dict]:  # example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
-    pokeurl = "https://pokeapi.co/api/v2/pokemon/" + str(pokeid + 1)
+    pokeurl = "https://pokeapi.co/api/v2/pokemon/" + str(pokeid)
 
     dataraw = requests.get(pokeurl)
     data = dataraw.json()
@@ -35,37 +33,39 @@ def move_api_format(movename: str) -> Optional[Dict]:
 
 # Return list of added moves to the database
 def poke_moves(id: int) -> Optional[Dict]:
+    local_db = sqlite3.connect(DB_FILE)
+    local_cursor = local_db.cursor()
     pokedata = poke_api_format(id)
     move_list = []
 
     for i in range(len(pokedata["moves"])):
         current_move = pokedata["moves"][i]["move"]["name"]
-        cursor.execute(
+        local_cursor.execute(
             "SELECT name FROM moves WHERE name = ? AND universe = ?",
             (current_move, "Pokemon"),
         )
-        if cursor.fetchone() != None:
+        if local_cursor.fetchone() != None:
             continue
         else:
             move_data = move_api_format(current_move)
 
             move_name = move_data["name"]
+            move_id = move_data["id"]
             move_type = move_data["type"]["name"]
             move_power = move_data["power"]
             move_accuracy = move_data["accuracy"]
 
             move_list.append(current_move)
-            cursor.execute(
+            local_cursor.execute(
                 """
                 INSERT OR IGNORE INTO moves (name, id, damage, type, accuracy, universe)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """,
-                (move_name, i, move_power, move_type, move_accuracy, "Pokemon"),
+                (move_name, move_id, move_power, move_type, move_accuracy, "Pokemon"),
             )
 
-    db.commit()
-    db.close()
-
+    local_db.commit()
+    local_db.close()
     return move_list
 
 
@@ -125,8 +125,8 @@ def get_pokemon(pokeid: int):
 
 
 # Yu-Gi-Oh! API
-def yugioh_api_format(id: int):
-    url = "https://db.ygoprodeck.com/api/v7/cardinfo.php?id=" + str(id)
+def yugioh_api_format(name: str):
+    url = "https://db.ygoprodeck.com/api/v7/cardinfo.php?name=" + name
 
     dataraw = requests.get(url)
     data = dataraw.json()
@@ -161,11 +161,13 @@ def yugioh_get_image(card: Dict):
     return imagelink
 
 
-def get_yugioh(id: int):
-    card = yugioh_api_format(id)
+def get_yugioh(name: str):
+    response = yugioh_api_format(name)
+    card = response["data"][0]
 
     charname = yugioh_get_name(card)
     imagelink = yugioh_get_image(card)
+    id = card["id"]
     type = yugioh_get_type(card)
     hp = yugioh_get_stat(card, "hp")
     attack = yugioh_get_stat(card, "attack")
@@ -178,35 +180,43 @@ def get_yugioh(id: int):
 
 # DND API
 def dnd_moves(name: str):
+    local_db = sqlite3.connect(DB_FILE)
+    local_cursor = local_db.cursor()
     dnddata = dnd_api_format(name)
     move_list = []
 
     for i in range(len(dnddata["actions"])):
         current_move = dnddata["actions"][i]["name"]
-        cursor.execute(
+        local_cursor.execute(
             "SELECT name FROM moves WHERE name = ? AND universe = ?",
             (current_move, "DND"),
         )
-        if cursor.fetchone() != None:
+        if local_cursor.fetchone() != None:
             continue
         else:
             move_name = dnddata["actions"][i]["name"]
-            move_type = dnddata["actions"][i]["damage"][0]["damage_type"]
-            move_power = dnddata["actions"][i]["attack_bonus"] * 10.0
+            if (
+                "damage" in dnddata["actions"][i]
+                and dnddata["actions"][i]["damage"]
+                and len(dnddata["actions"][i]["damage"]) > 0
+            ):
+                move_type = dnddata["actions"][i]["damage"][0]["damage_type"]["name"]
+            else:
+                move_type = "None"
+            move_power = dnddata["actions"][i].get("attack_bonus", 0) * 10.0
             move_accuracy = 100
 
             move_list.append(current_move)
-            cursor.execute(
+            local_cursor.execute(
                 """
                 INSERT OR IGNORE INTO moves (name, id, type, damage, accuracy, universe)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """,
-                (move_name, i, move_type, move_power, move_accuracy, "DND"),
+                (move_name, 0, move_type, move_power, move_accuracy, "DND"),
             )
 
-    db.commit()
-    db.close()
-
+    local_db.commit()
+    local_db.close()
     return move_list
 
 
@@ -263,50 +273,27 @@ def get_dnd(name: str):
     attack = dnd_get_moves(card)
     universe = "DND"
 
-    dnddata = [charname, imagelink, id, type, hp, attack, universe]
+    dnddata = [charname, imagelink, 0, type, hp, attack, universe]
 
     return dnddata
 
 
-# returns list ([charname, imagelink, id, type, attack, hp, universe]) from a random D&D card
-def get_dndcard(index: int):  # index should be within 0 and 333
-    urlone = "https://www.dnd5eapi.co/api/2014/monsters"
-    with urllib.request.urlopen(urlone) as pageone:
-        urlpart = json.load(pageone)
-        urlpart = urlpart["results"][index]["url"]
-    urltwo = "https://www.dnd5eapi.co" + urlpart
-    with urllib.request.urlopen(urltwo) as pagetwo:
-        data = json.load(pagetwo)
-
-        # print(dnd_moves(data, 0))
-        charname = data["name"]
-        imagelink = "https://www.dnd5eapi.co" + data["image"]
-        id = index + num_pokemon
-        type = data["type"]
-        dice = data["hit_dice"]
-        dicearray = dice.split("d")
-        dicearray = [int(x) for x in dicearray]
-        attack = int(dicearray[0] * dicearray[1] / 2)
-        hp = data["hit_points"]
-        universe = "DND"
-        list = [charname, imagelink, id, type, attack, hp, universe]
-        # print(list)
-        return list
-
-
 def db_insert(data: list):
-    db = sqlite3.connect(DB_FILE)
-    cursor = db.cursor()
+    local_db = sqlite3.connect(DB_FILE)
+    local_cursor = local_db.cursor()
 
-    cursor.execute(
+    local_cursor.execute(
         "INSERT or IGNORE INTO chars (charname, imagelink, id, type, hp, moves, universe) values (?, ?, ?, ?, ?, ?, ?)",
         (data[0], data[1], data[2], data[3], data[4], data[5], data[6]),
     )
-    db.commit()
-    db.close()
+    local_db.commit()
+    local_db.close()
 
 
 # Build Databse
+
+db = sqlite3.connect(DB_FILE)
+cursor = db.cursor()
 
 cursor.executescript(
     """
@@ -341,9 +328,9 @@ cursor.executescript(
     CREATE TABLE moves (
     name TEXT UNIQUE,
     id TEXT PRIMARY KEY,
-    type TEXT
+    type TEXT,
     damage INTEGER,
-    accuracy INTEGER
+    accuracy INTEGER,
     universe TEXT
     );
     """
@@ -358,14 +345,37 @@ cursor.executescript(
     id INTEGER PRIMARY KEY,
     type TEXT,
     hp INTEGER,
-    atk INTEGER,
     moves TEXT,
-    universe TEXT,
-    FOREIGN KEY (moves) REFERENCES moves(id)
+    universe TEXT
     );
     """
 )
 
-# print(get_dndcard(3))
 db.commit()
 db.close()
+
+
+def populate_yugioh(name: str):
+    db_insert(get_yugioh(name))
+
+
+def populate_dnd(name: str):
+    db_insert(get_dnd(name))
+    dnd_moves(name)
+
+
+def populate_db():
+    for i in range(num_pokemon):
+        data = get_pokemon(i + 1)
+        db_insert(data)
+        poke_moves(i + 1)
+
+    populate_yugioh("Dark Magician")
+    populate_yugioh("Blue-Eyes White Dragon")
+
+    populate_dnd("adult-black-dragon")
+
+
+if __name__ == "__main__":
+    populate_db()
+    populate_db()
