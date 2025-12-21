@@ -12,71 +12,7 @@ num_pokemon = 151
 num_dnd = 334
 
 
-def dnd_moves(dnddata: Dict, moveindex: int):
-    movedata = dnddata["actions"][moveindex]
-
-    if movedata["damage"] == []:
-        if (
-            movedata["name"] == "Multiattack"
-        ):  # if the attack is a multi-attack (because that has no damage dice) picks the first attack in the multiattack with damage dice and makes that the chosen move
-            for actind in movedata["actions"]:
-                for actind2 in dnddata["actions"]:
-                    if actind["action_name"] == actind2["name"]:
-                        if actind2["damage"] != []:
-                            move_power_str = actind2["damage"][0]["damage_dice"]
-
-                            dicearray_str = move_power_str.split("+")
-                            print(dicearray_str)
-                            dicearray = move_power_str[0].split("d")
-                            print(dicearray)
-                            dicearray = [
-                                int(x) for x in dicearray
-                            ]  # turns attack into an integer
-                            movepower = int(
-                                dicearray[0] * dicearray[1] / 2 * 3
-                            )  # multiplies attack amount by 3 to account for multiattack's extra attacks
-
-                            return movepower
-
-    move_power_str = dnddata["damage"]["damage"][0]["damage_dice"]
-
-    dicearray = move_power_str.split("d")
-    dicearray = [int(x) for x in dicearray]  # turns attack into an integer
-    movepower = int(
-        dicearray[0] * dicearray[1] / 2 * 3
-    )  # multiplies attack amount by 3 to account for multiattack's extra attacks
-
-    return movepower
-
-    # def yugioh_moves(yugiohdata: Dict, moveindex: int):
-
-
-#         for actionindex in range(len(dnddata["actions"])):
-#             movename = movedata["actions"][actionindex]["action_name"]
-#             print(dnddata["actions"][moveindex]["actions"][actionindex]["action_name"])
-#             print(movename)
-#             if dnddata["actions"][actionindex]["damage"]["name"] == movename and dnddata["actions"][actionindex]["damage"] != []: #iterates through every attack in the multiattack until one that actually does damage is found
-#                 move_power_str = dnddata["actions"][actionindex]["damage"]["damage"][0]["damage_dice"]
-#
-#                 dicearray = move_power_str.split("d")
-#                 dicearray = [int(x) for x in dicearray] #turns attack into an integer
-#                 movepower = int(dicearray[0] * dicearray[1] / 2 * 3) #multiplies attack amount by 3 to account for multiattack's extra attacks
-#
-#                 return(movepower)
-
-
-#     move_power_str = movedata["damage"][0]["damage_dice"] #work on this later ngl
-#
-#     dicearray = move_power_str.split("d")
-#     dicearray = [int(x) for x in dicearray]
-#     movepower = int(dicearray[0] * dicearray[1] / 2)
-#
-#     print(movepower)
-
-# formats api data into a dictionary
-
-
-# POKEMON
+# Pokemon API
 def poke_api_format(
     pokeid: int,
 ) -> Optional[Dict]:  # example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
@@ -98,12 +34,16 @@ def move_api_format(movename: str) -> Optional[Dict]:
 
 
 # Return list of added moves to the database
-def poke_moves(pokedata: Dict) -> Optional[Dict]:
+def poke_moves(id: int) -> Optional[Dict]:
+    pokedata = poke_api_format(id)
     move_list = []
 
     for i in range(len(pokedata["moves"])):
         current_move = pokedata["moves"][i]["move"]["name"]
-        cursor.execute("SELECT name FROM moves WHERE name = ?", (current_move,))
+        cursor.execute(
+            "SELECT name FROM moves WHERE name = ? AND universe = ?",
+            (current_move, "Pokemon"),
+        )
         if cursor.fetchone() != None:
             continue
         else:
@@ -117,10 +57,10 @@ def poke_moves(pokedata: Dict) -> Optional[Dict]:
             move_list.append(current_move)
             cursor.execute(
                 """
-                INSERT OR IGNORE INTO moves (name, id, damage, type, accuracy)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT OR IGNORE INTO moves (name, id, damage, type, accuracy, universe)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """,
-                (move_name, i, move_power, move_type, move_accuracy),
+                (move_name, i, move_power, move_type, move_accuracy, "Pokemon"),
             )
 
     db.commit()
@@ -185,9 +125,6 @@ def get_pokemon(pokeid: int):
 
 
 # Yu-Gi-Oh! API
-# 20 requests per 1 second
-
-
 def yugioh_api_format(id: int):
     url = "https://db.ygoprodeck.com/api/v7/cardinfo.php?id=" + str(id)
 
@@ -237,6 +174,98 @@ def get_yugioh(id: int):
     yugiohdata = [charname, imagelink, id, type, hp, attack, universe]
 
     return yugiohdata
+
+
+# DND API
+def dnd_moves(name: str):
+    dnddata = dnd_api_format(name)
+    move_list = []
+
+    for i in range(len(dnddata["actions"])):
+        current_move = dnddata["actions"][i]["name"]
+        cursor.execute(
+            "SELECT name FROM moves WHERE name = ? AND universe = ?",
+            (current_move, "DND"),
+        )
+        if cursor.fetchone() != None:
+            continue
+        else:
+            move_name = dnddata["actions"][i]["name"]
+            move_type = dnddata["actions"][i]["damage"][0]["damage_type"]
+            move_power = dnddata["actions"][i]["attack_bonus"] * 10.0
+            move_accuracy = 100
+
+            move_list.append(current_move)
+            cursor.execute(
+                """
+                INSERT OR IGNORE INTO moves (name, id, type, damage, accuracy, universe)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (move_name, i, move_type, move_power, move_accuracy, "DND"),
+            )
+
+    db.commit()
+    db.close()
+
+    return move_list
+
+
+def dnd_api_format(name: str):
+    url = "https://www.dnd5eapi.co/api/2014/monsters/" + name
+
+    dataraw = requests.get(url)
+    data = dataraw.json()
+
+    return data
+
+
+def dnd_get_stat(card: Dict, statname: str):
+    if statname == "hp":
+        statvalue = card["hit_points"]
+
+    return statvalue
+
+
+def dnd_get_name(card: Dict):
+    charname = card["name"]
+
+    return charname
+
+
+def dnd_get_type(card: Dict):
+    type = card["type"]
+
+    return type
+
+
+def dnd_get_image(card: Dict):
+    imagelink = card["image"]
+
+    return imagelink
+
+
+def dnd_get_moves(card: Dict):
+    dndmoves = []
+    for i in card["actions"]:
+        dndmoves.append(i["name"])
+
+    dndmoves = ", ".join(dndmoves)
+    return dndmoves
+
+
+def get_dnd(name: str):
+    card = dnd_api_format(name)
+
+    charname = dnd_get_name(card)
+    imagelink = dnd_get_image(card)
+    type = dnd_get_type(card)
+    hp = dnd_get_stat(card, "hp")
+    attack = dnd_get_moves(card)
+    universe = "DND"
+
+    dnddata = [charname, imagelink, id, type, hp, attack, universe]
+
+    return dnddata
 
 
 # returns list ([charname, imagelink, id, type, attack, hp, universe]) from a random D&D card
@@ -315,6 +344,7 @@ cursor.executescript(
     type TEXT
     damage INTEGER,
     accuracy INTEGER
+    universe TEXT
     );
     """
 )
