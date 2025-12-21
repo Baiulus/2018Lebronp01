@@ -11,9 +11,7 @@ num_yugioh = 2
 
 
 # Pokemon API
-def poke_api_format(
-    pokeid: int,
-) -> Optional[Dict]:  # example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
+def poke_api_format(pokeid: int) -> Optional[Dict]:  # example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
     pokeurl = "https://pokeapi.co/api/v2/pokemon/" + str(pokeid)
 
     dataraw = requests.get(pokeurl)
@@ -221,7 +219,7 @@ def dnd_moves(name: str):
 
 
 def dnd_api_format(name: str):
-    url = "https://www.dnd5eapi.co/api/2014/monsters/" + name
+    url = "https://www.dnd5eapi.co/api/2014/monsters/" + str(name)
 
     dataraw = requests.get(url)
     data = dataraw.json()
@@ -249,7 +247,7 @@ def dnd_get_type(card: Dict):
 
 
 def dnd_get_image(card: Dict):
-    imagelink = card["image"]
+    imagelink = "https://www.dnd5eapi.co" + card["image"]
 
     return imagelink
 

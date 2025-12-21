@@ -234,3 +234,7 @@ lucasZ -- 2025-12-21 16:09
 - minor bug fixes and api pullling in build.db to get it working
 - removed db.py
 
+lucasZ -- 2025-12-21 17:34
+- Editied display of __init__.py
+- Fixed compatibility issues between files
+
