@@ -16,7 +16,7 @@ db.row_factory = sqlite3.Row
 
 # General QOL
 
-def accessitem(table: str, column: str): -> None
+def accessitem(table: str, column: str) -> None:
     cursor.execute(
         f"Select" + column + "from" + table
     )
