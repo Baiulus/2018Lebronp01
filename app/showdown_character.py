@@ -1,11 +1,13 @@
+
 class showdowner:
 
-    def __init__(self, name, img, type, hp, moves):
+    def __init__(self, name, img, type, hp, moves, universe):
         self.name = name
         self.img = img
         self.type = type
         self.hp = hp
         self.moves = moves if moves else ["Basic Attack"]
+        self.universe = universe
 
     def __str__(self):
         str = ""
@@ -21,7 +23,8 @@ class showdowner:
             "Img": self.img,
             "Type": self.type,
             "HP": self.hp,
-            "Moves": self.moves
+            "Moves": self.moves,
+            "Universe": self.universe
         }
         return d
 
@@ -32,11 +35,15 @@ class showdowner:
             d['Img'], 
             d['Type'], 
             d['HP'], 
-            d['Moves']
+            d['Moves'],
+            d['Universe']
         )
         return old_self
 
-    def attack(self, move_name, other, universe="Pokemon"):
-        # This method is now handled in the Flask route with type advantage
-        # Keeping it for backward compatibility
-        pass
+    # def attack(self, move_name, other, universe="Pokemon"):
+    #     # This method is now handled in the Flask route with type advantage
+    #     # Keeping it for backward compatibility
+    #     pass
+
+    def attack(self, other, dmg):
+        other.hp -= dmg

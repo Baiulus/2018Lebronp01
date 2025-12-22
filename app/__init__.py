@@ -221,7 +221,12 @@ def setup_teams():
             c2 = db.cursor()
             c2.execute("select * from chars where id = ?", (id,))
             char = c2.fetchone()
-            temp = showdowner(char[0], char[1], char[4], char[5])
+            moves = [m.strip() for m in char[5].split(",")]
+            if (char[6] == 'Yugioh'):
+                hp = int(0.2 * char[4])
+            else:
+                hp = char[4]
+            temp = showdowner(char[0], char[1], char[3], hp, moves, char[6])
             team1.append(temp.to_dict())
 
         c.execute("select * from teams where teamid = ?", (session.get('team2'),))
@@ -231,7 +236,12 @@ def setup_teams():
             c2 = db.cursor()
             c2.execute("select * from chars where id = ?", (id,))
             char = c2.fetchone()
-            temp = showdowner(char[0], char[1], char[4], char[5])
+            moves = [m.strip() for m in char[5].split(",")]
+            if (char[6] == 'Yugioh'):
+                hp = int(0.2 * char[4])
+            else:
+                hp = char[4]
+            temp = showdowner(char[0], char[1], char[3], hp, moves, char[6])
             team2.append(temp.to_dict())
 
         session['team1'] = team1
@@ -255,17 +265,71 @@ def disp_showdown():
 
         for i in range(len(team1)):
             target = request.form.get(f"target_{i}")
-            if not target is None:
-                target = int(target)
-                team1[i].attack(team2[target])
-                team1_messages.append(f"{team1[i].name} attacked {team2[target].name} for {team1[i].atk} damage!")
-                user_attacked = True
+            attack = request.form.get(f"move_{i}")
+            if target is None or attack is None:
+                continue
+            
+            target = int(target)
+            if (team1[i].universe == "Yugioh"):
+                adjusted = int(0.02 * int(team1[i].moves[0]))
+                team1[i].attack(team2[target], adjusted)
+                team1_messages.append(f"{team1[i].name} attacked {team2[target].name} for {adjusted} damage!")
+                continue
+
+            db = sqlite3.connect(DB_FILE)
+            c = db.cursor()
+            c.execute("select * from moves where name = ?", (attack,))
+            temp = c.fetchone()
+            if temp is None:
+                team1_messages.append(f"{team1[i].name}'s move failed!")
+                continue
+
+            # type, damage, accuracy, universe
+            attributes = [temp[2], temp[3], temp[4], temp[5]]
+            if (temp[2] is None or temp[3] is None or temp[4] is None or temp[5] is None):
+                team1_messages.append(f"{team1[i].name}'s move failed!")
+                continue
+
+            if (random.randint(0, 100) < attributes[2]):
+                team1[i].attack(team2[target], attributes[1])
+                team1_messages.append(f"{team1[i].name} used {attack} on {team2[target].name} for {attributes[1]} damage!")
+            else:
+                team1_messages.append(f"{team1[i].name} missed!")
+            db.close()
+        
+            user_attacked = True
+
 
         if (user_attacked):
             for member in team2:
                 target = random.randint(0, len(team1) - 1)
-                member.attack(team1[target])
-                team2_messages.append(f"{member.name} attacked {team1[target].name} for {member.atk} damage!")
+                if (member.universe == 'Yugioh'):
+                    adjusted = int(0.02 * int(member.moves[0]))
+                    member.attack(team1[target], adjusted)
+                    team2_messages.append(f"{member.name} attacked {team1[target].name} for {adjusted} damage!")
+                    continue
+
+                db = sqlite3.connect(DB_FILE)
+                c = db.cursor()
+                attack = random.choice(member.moves)
+                c.execute("select * from moves where name = ?", (attack,))
+                temp = c.fetchone()
+                if temp is None:
+                    team2_messages.append(f"{member.name}'s move failed!")
+                    continue
+
+                # type, damage, accuracy, universe
+                attributes = [temp[2], temp[3], temp[4], temp[5]]
+                if (temp[2] is None or temp[3] is None or temp[4] is None or temp[5] is None):
+                    team2_messages.append(f"{member.name}'s move failed!")
+                    continue
+
+                if (random.randint(0, 100) < attributes[2]):
+                    member.attack(team1[target], attributes[1])
+                    team2_messages.append(f"{member.name} used {attack} on {team1[target].name} for {attributes[1]} damage!")
+                else:
+                    team2_messages.append(f"{member.name} missed!")
+                db.close()
 
         team1 = [member for member in team1 if member.hp > 0]
         team2 = [member for member in team2 if member.hp > 0]

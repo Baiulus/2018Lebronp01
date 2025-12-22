@@ -238,3 +238,9 @@ lucasZ -- 2025-12-21 17:34
 - Editied display of __init__.py
 - Fixed compatibility issues between files
 
+shafinK -- 2025-12-21 20:00
+- added move selection to battles
+- dealt with battle logic with moves (player and enemy)
+- small bug fixed with roster and displaying the yugioh cards
+- added the instructions to homepage
+

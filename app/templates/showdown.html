@@ -1,91 +1,121 @@
 <!--
-    Lucas Zheng, Emily Mai, Mycroft Lee, Shafin Kazi
-    SoftDev 2025
-    P01
-  -->
+   Lucas Zheng, Emily Mai, Mycroft Lee, Shafin Kazi
+   SoftDev 2025
+   P01
+ -->
 {% extends "base.html" %}
+
 
 {% block title %}
 Showdown
 {% endblock %}
 
+
 {% block content %}
 <br> <br> <br> <br> <br>
 
+
 <div class="flex w-2/5 mx-auto grid grid-cols-1">
-  <div class="grid grid-cols-{{team1|length}}">
-
-    {% for member in team1 %}
-    <div class="col-span-1 my-3">
-      <div class="max-w-sm rounded border-2 border- border-red-500 ms-2 items-center p-2 text-center">
-        <img class="w-24 h-32 object-cover mx-auto" src="{{member.img}}">
-        <p class="font-semibold">{{member.name}}</p>
-        <p><span class=" text-red-500 font-semibold">HP:</span> {{member.hp}}</p>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
+ <div class="grid grid-cols-{{team1|length}}">
 
 
-  <div class="grid grid-cols-{{team2|length}}">
-    {% for member in team2 %}
-    <div class="col-span-1">
-      <div class="rounded border-2 border-yellow-400 ms-2 items-center p-2 text-center">
-        <img class="w-24 h-32 object-cover mx-auto" src="{{member.img}}">
-        <p class="font-semibold">{{member.name}}</p>
-        <p><span class=" text-yellow-400 font-semibold">HP:</span> {{member.hp}}</p>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
+   {% for member in team1 %}
+   <div class="col-span-1 my-3">
+     <div class="max-w-sm rounded border-2 border- border-red-500 ms-2 items-center p-2 text-center">
+       <img class="w-24 h-32 object-cover mx-auto" src="{{member.img}}">
+       <p class="font-semibold">{{member.name}}</p>
+       <p><span class=" text-red-500 font-semibold">HP:</span> {{member.hp}}</p>
+     </div>
+   </div>
+   {% endfor %}
+ </div>
+
+
+
+
+ <div class="grid grid-cols-{{team2|length}}">
+   {% for member in team2 %}
+   <div class="col-span-1">
+     <div class="rounded border-2 border-yellow-400 ms-2 items-center p-2 text-center">
+       <img class="w-24 h-32 object-cover mx-auto" src="{{member.img}}">
+       <p class="font-semibold">{{member.name}}</p>
+       <p><span class=" text-yellow-400 font-semibold">HP:</span> {{member.hp}}</p>
+     </div>
+   </div>
+   {% endfor %}
+ </div>
 </div>
+
 
 <form method="POST" action="/showdown" class="w-4/5 mx-auto mt-10">
 
-  {% for i in range(team1|length) %}
-    {% set attacker = team1[i] %}
-    <div class="mb-8">
-      <p class="font-semibold mb-3 text-center">
-        Who should {{attacker.name}} attack?
-      </p>
-      <div class="flex justify-center gap-8">
-        {% for j in range(team2|length) %}
-        <label>
-          <input type="radio" required name="target_{{i}}" value="{{j}}" class="accent-yellow-400 mb-1 mr-2">{{team2[j].name}}
-        </label>
-        {% endfor %}
-      </div>
-    </div>
-  {% endfor %}
 
-  <div class="flex justify-center mt-10 mb-6">
-    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-8 rounded transition duration-200 hover:scale-105">
-      Showdown!
-    </button>
-  </div>
+ {% for i in range(team1|length) %}
+   {% set attacker = team1[i] %}
+   <div class="mb-4">
+     <p class="font-semibold mb-3 text-center">
+       Who should {{attacker.name}} attack?
+     </p>
+     <div class="flex justify-center gap-8">
+       {% for j in range(team2|length) %}
+       <label>
+         <input type="radio" required name="target_{{i}}" value="{{j}}" class="accent-yellow-400 mb-1 mr-2">{{team2[j].name}}
+       </label>
+       {% endfor %}
+     </div>
+   </div>
+
+
+   <div class="mb-8">
+     <div class="flex justify-center">
+         <label class="mr-2 font-semibold">Which move?</label>
+         <select required name="move_{{i}}" class="rounded border border-gray-300 px-2 py-1">
+           {% for move in attacker.moves %}
+             <option value="{{ move }}">{{ move }}</option>
+           {% endfor %}
+         </select>
+       </div>
+     </div>
+   </div>
+   
+ {% endfor %}
+
+
+ <div class="flex justify-center mt-10 mb-6">
+   <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-8 rounded transition duration-200 hover:scale-105">
+     Showdown!
+   </button>
+ </div>
+
 
 </form>
 
+
 {% if team1_messages %}
-  {% for message in team1_messages %}
-    <div class="space-y-4 mt-4">
-      <div
-        class="flex w-4/5 mx-auto px-4 py-3 rounded bg-green-100 border border-green-400 text-green-700" role="alert">
-        {{ message }}
-      </div>
-    </div>
-  {% endfor %}
+ {% for message in team1_messages %}
+   <div class="space-y-4 mt-4">
+     <div
+       class="flex w-4/5 mx-auto px-4 py-3 rounded bg-green-100 border border-green-400 text-green-700" role="alert">
+       {{ message }}
+     </div>
+   </div>
+ {% endfor %}
 {% endif %}
+
 
 {% if team2_messages %}
-  {% for message in team2_messages %}
-    <div class="space-y-4 mt-4">
-      <div
-        class="flex w-4/5 mx-auto px-4 py-3 rounded bg-red-100 border border-red-400 text-red-700" role="alert">
-        {{ message }}
-      </div>
-    </div>
-  {% endfor %}
+ {% for message in team2_messages %}
+   <div class="space-y-4 mt-4">
+     <div
+       class="flex w-4/5 mx-auto px-4 py-3 rounded bg-red-100 border border-red-400 text-red-700" role="alert">
+       {{ message }}
+     </div>
+   </div>
+ {% endfor %}
 {% endif %}
 
+
 {% endblock %}
+
+
+
