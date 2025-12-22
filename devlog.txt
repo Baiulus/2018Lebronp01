@@ -244,3 +244,6 @@ shafinK -- 2025-12-21 20:00
 - small bug fixed with roster and displaying the yugioh cards
 - added the instructions to homepage
 
+
+lucasZ -- 2025-12-22 00:30
+- added more characters

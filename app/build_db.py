@@ -6,12 +6,13 @@ from typing import List, Dict, Optional
 
 DB_FILE = "Lebron.db"
 
-num_pokemon = 2
-num_yugioh = 2
+num_pokemon = 25
 
 
 # Pokemon API
-def poke_api_format(pokeid: int) -> Optional[Dict]:  # example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
+def poke_api_format(
+    pokeid: int,
+) -> Optional[Dict]:  # example: apiformat("https://pokeapi.co/api/v2/pokemon/mew")
     pokeurl = "https://pokeapi.co/api/v2/pokemon/" + str(pokeid)
 
     dataraw = requests.get(pokeurl)
@@ -370,8 +371,13 @@ def populate_db():
 
     populate_yugioh("Dark Magician")
     populate_yugioh("Blue-Eyes White Dragon")
+    populate_yugioh("Hundred Eyes Dragon")
+    populate_yugioh("Mystical Elf")
+    populate_yugioh("First of the Dragonlords")
 
     populate_dnd("adult-black-dragon")
+    populate_dnd("adult-brass-dragon")
+    populate_dnd("ancient-blue-dragon")
 
 
 if __name__ == "__main__":
