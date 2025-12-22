@@ -1,5 +1,6 @@
 import requests
 import json
+import random
 import urllib.request
 import sqlite3, os
 from typing import List, Dict, Optional
@@ -267,12 +268,13 @@ def get_dnd(name: str):
 
     charname = dnd_get_name(card)
     imagelink = dnd_get_image(card)
+    id = abs(hash(charname) % 10000000)
     type = dnd_get_type(card)
     hp = dnd_get_stat(card, "hp")
     attack = dnd_get_moves(card)
     universe = "DND"
 
-    dnddata = [charname, imagelink, 0, type, hp, attack, universe]
+    dnddata = [charname, imagelink, id, type, hp, attack, universe]
 
     return dnddata
 
@@ -369,15 +371,19 @@ def populate_db():
         db_insert(data)
         poke_moves(i + 1)
 
-    populate_yugioh("Dark Magician")
+    populate_yugioh("Black Luster Soldier")
     populate_yugioh("Blue-Eyes White Dragon")
     populate_yugioh("Hundred Eyes Dragon")
     populate_yugioh("Mystical Elf")
     populate_yugioh("First of the Dragonlords")
+    populate_yugioh("Dark Magician Girl")
 
     populate_dnd("adult-black-dragon")
-    populate_dnd("adult-brass-dragon")
-    populate_dnd("ancient-blue-dragon")
+    populate_dnd("chimera")
+    populate_dnd("medusa")
+    populate_dnd("berserker")
+    populate_dnd("fire-giant")
+    populate_dnd("wyvern")
 
 
 if __name__ == "__main__":

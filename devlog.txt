@@ -247,3 +247,7 @@ shafinK -- 2025-12-21 20:00
 
 lucasZ -- 2025-12-22 00:30
 - added more characters
+
+shafinK -- 2025-12-22 1:14
+- added more characters (fixed dnd character adding)
+- changed images on homepage
